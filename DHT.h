@@ -1,0 +1,5 @@
+/* DHT library 
+
+MIT license
+written by Adafruit Industries
+*/
