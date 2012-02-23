@@ -19,13 +19,17 @@ void DHT::begin(void) {
   _lastreadtime = 0;
 }
 
-float DHT::readTemperature(void) {
+//boolean S == Scale.  True == Farenheit; False == Celcius
+float DHT::readTemperature(bool S) {
   float f;
 
   if (read()) {
     switch (_type) {
     case DHT11:
       f = data[2];
+      if(S)
+      	f = convertCtoF(f);
+      	
       return f;
     case DHT22:
     case DHT21:
@@ -35,12 +39,18 @@ float DHT::readTemperature(void) {
       f /= 10;
       if (data[2] & 0x80)
 	f *= -1;
+      if(S)
+	f = convertCtoF(f);
 
       return f;
     }
   }
   Serial.print("Read fail");
   return NAN;
+}
+
+float DHT::convertCtoF(float c) {
+	return c * 9 / 5 + 32;
 }
 
 float DHT::readHumidity(void) {
