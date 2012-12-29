@@ -6,9 +6,10 @@ written by Adafruit Industries
 
 #include "DHT.h"
 
-DHT::DHT(uint8_t pin, uint8_t type) {
+DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   _pin = pin;
   _type = type;
+  _count = count;
   firstreading = true;
 }
 
@@ -129,7 +130,7 @@ boolean DHT::read(void) {
     if ((i >= 4) && (i%2 == 0)) {
       // shove each bit into the storage bytes
       data[j/8] <<= 1;
-      if (counter > 6)
+      if (counter > _count)
         data[j/8] |= 1;
       j++;
     }
