@@ -38,7 +38,17 @@ void loop() {
     Serial.print(h);
     Serial.print(" %\t");
     Serial.print("Temperature: "); 
+    /* Uncomment for Cel.
     Serial.print(t);
-    Serial.println(" *C");
+    Serial.println(" *C"); */
+
+    // Start F Conversion Function
+    byte TempF;
+    float temps;
+    temps = t;
+    TempF = temps*1.8+32,DEC;
+    Serial.println(TempF);
+    Serial.println(" *F");
+    
   }
 }
