@@ -107,7 +107,7 @@ boolean DHT::read(void) {
   pinMode(_pin, OUTPUT);
   digitalWrite(_pin, LOW);
   delay(20);
-  noInterrupts();
+  cli();
   digitalWrite(_pin, HIGH);
   delayMicroseconds(40);
   pinMode(_pin, INPUT);
@@ -137,7 +137,7 @@ boolean DHT::read(void) {
 
   }
 
-  interrupts();
+  sei();
   
   /*
   Serial.println(j, DEC);
