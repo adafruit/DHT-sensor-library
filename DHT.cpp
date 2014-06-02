@@ -93,10 +93,8 @@ boolean DHT::read(void) {
   uint8_t j = 0, i;
   unsigned long currenttime;
 
-  // pull the pin high and wait 250 milliseconds
-  digitalWrite(_pin, HIGH);
-  delay(250);
-
+  // Check if sensor was read less than two seconds ago and return early
+  // to use last reading.
   currenttime = millis();
   if (currenttime < _lastreadtime) {
     // ie there was a rollover
@@ -115,6 +113,10 @@ boolean DHT::read(void) {
 
   data[0] = data[1] = data[2] = data[3] = data[4] = 0;
   
+  // pull the pin high and wait 250 milliseconds
+  digitalWrite(_pin, HIGH);
+  delay(250);
+
   // now pull it low for ~20 milliseconds
   pinMode(_pin, OUTPUT);
   digitalWrite(_pin, LOW);
