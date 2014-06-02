@@ -24,7 +24,6 @@ class DHT {
  private:
   uint8_t data[6];
   uint8_t _pin, _type, _count;
-  boolean read(void);
   unsigned long _lastreadtime;
   boolean firstreading;
 
@@ -35,6 +34,7 @@ class DHT {
   float convertCtoF(float);
   float computeHeatIndex(float tempFahrenheit, float percentHumidity);
   float readHumidity(void);
+  boolean read(void);
 
 };
 #endif
