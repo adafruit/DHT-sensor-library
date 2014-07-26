@@ -53,6 +53,10 @@ float DHT::convertCtoF(float c) {
 	return c * 9 / 5 + 32;
 }
 
+float DHT::convertFtoC(float f) {
+  return (f - 32) * 5 / 9; 
+}
+
 float DHT::readHumidity(void) {
   float f;
   if (read()) {
