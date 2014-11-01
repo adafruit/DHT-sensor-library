@@ -46,16 +46,17 @@ void loop() {
   float t = dht.readTemperature();
   // Read temperature as Fahrenheit
   float f = dht.readTemperature(true);
-  
+
   // Check if any reads failed and exit early (to try again).
   if (isnan(h) || isnan(t) || isnan(f)) {
     Serial.println("Failed to read from DHT sensor!");
     return;
   }
 
-  // Compute heat index
-  // Must send in temp in Fahrenheit!
-  float hi = dht.computeHeatIndex(f, h);
+  // Compute heat index in Celsius
+  float hic = dht.computeHeatIndex(t, h);
+  // Compute heat index in Fahrenheit
+  float hif = dht.computeHeatIndex(f, h, true);
 
   Serial.print("Humidity: "); 
   Serial.print(h);
@@ -66,6 +67,8 @@ void loop() {
   Serial.print(f);
   Serial.print(" *F\t");
   Serial.print("Heat index: ");
-  Serial.print(hi);
+  Serial.print(hic);
+  Serial.print(" *C ");
+  Serial.print(hif);
   Serial.println(" *F");
 }
