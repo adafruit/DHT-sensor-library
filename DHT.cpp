@@ -142,16 +142,19 @@ boolean DHT::read(void) {
     }
     laststate = digitalRead(_pin);
 
-    if (counter == 255) break;
-
-    // ignore first 3 transitions
-    if ((i >= 4) && (i%2 == 0)) {
-      // shove each bit into the storage bytes
-      data[j/8] <<= 1;
-      if (counter > _count)
-        data[j/8] |= 1;
-      j++;
-    }
+    // ignore first 3 transitions, these are used to mark that the
+    // sensor will start outputting data.
+    if ((i <= 3)) continue;
+    // we only read out high level durations.
+    if ((i % 2 != 0)) continue;
+    
+    // shove each bit into the storage bytes
+    data[j / 8] <<= 1;
+    // detect if bit was high or low
+    // datasheet: 26~28uS == Low Byte and 70uS == High Byte.
+    if (counter > _count) data[j / 8] |= 1;
+    
+    j++;
 
   }
 
