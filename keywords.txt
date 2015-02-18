@@ -6,16 +6,16 @@
 # Datatypes (KEYWORD1)
 ###########################################
 
-DHT	KEYWORD1
+DHT-sensor-libraryKEYWORD1
 
 ###########################################
 # Methods and Functions (KEYWORD2)
 ###########################################
 
-begin KEYWORD2
-readTemperature KEYWORD2
-convertCtoF KEYWORD2
-convertFtoC KEYWORD2
-computeHeatIndex KEYWORD2
-readHumidity KEYWORD2
-read KEYWORD2
+begin	KEYWORD2
+readTemperature	KEYWORD2
+convertCtoF	KEYWORD2
+convertFtoC	KEYWORD2
+computeHeatIndex	KEYWORD2
+readHumidity	KEYWORD2
+read	KEYWORD2
