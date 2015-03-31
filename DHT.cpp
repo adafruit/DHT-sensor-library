@@ -33,6 +33,7 @@ float DHT::readTemperature(bool S) {
       	
       return f;
     case DHT22:
+      break;
     case DHT21:
       f = data[2] & 0x7F;
       f *= 256;
@@ -50,7 +51,7 @@ float DHT::readTemperature(bool S) {
 }
 
 float DHT::convertCtoF(float c) {
-	return c * 9 / 5 + 32;
+  return c * 9 / 5 + 32;
 }
 
 float DHT::convertFtoC(float f) {
@@ -65,6 +66,7 @@ float DHT::readHumidity(void) {
       f = data[0];
       return f;
     case DHT22:
+      break;
     case DHT21:
       f = data[0];
       f *= 256;
@@ -173,7 +175,6 @@ boolean DHT::read(void) {
     return true;
   }
   
-
   return false;
 
 }
