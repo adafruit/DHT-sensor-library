@@ -11,6 +11,7 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   _type = type;
   _count = count;
   firstreading = true;
+  _lastreadsucceeded = false;
 }
 
 void DHT::begin(void) {
@@ -24,7 +25,8 @@ void DHT::begin(void) {
 float DHT::readTemperature(bool S) {
   float f;
 
-  if (read()) {
+  _lastreadsucceeded = read();
+  if (_lastreadsucceeded) {
     switch (_type) {
     case DHT11:
       f = data[2];
@@ -59,7 +61,8 @@ float DHT::convertFtoC(float f) {
 
 float DHT::readHumidity(void) {
   float f;
-  if (read()) {
+  _lastreadsucceeded = read();
+  if (_lastreadsucceeded) {
     switch (_type) {
     case DHT11:
       f = data[0];
@@ -105,7 +108,7 @@ boolean DHT::read(void) {
     _lastreadtime = 0;
   }
   if (!firstreading && ((currenttime - _lastreadtime) < 2000)) {
-    return true; // return last correct measurement
+    return _lastreadsucceeded; // return last measurement
     //delay(2000 - (currenttime - _lastreadtime));
   }
   firstreading = false;

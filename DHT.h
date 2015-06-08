@@ -26,6 +26,7 @@ class DHT {
   uint8_t _pin, _type, _count;
   unsigned long _lastreadtime;
   boolean firstreading;
+  boolean _lastreadsucceeded;
 
  public:
   DHT(uint8_t pin, uint8_t type, uint8_t count=6);
