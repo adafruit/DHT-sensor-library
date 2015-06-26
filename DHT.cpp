@@ -21,7 +21,7 @@ void DHT::begin(void) {
   _lastreadtime = 0;
 }
 
-//boolean S == Scale.  True == Farenheit; False == Celcius
+//boolean S == Scale.  True == Fahrenheit; False == Celcius
 float DHT::readTemperature(bool S) {
   float f = NAN;
 
@@ -78,18 +78,34 @@ float DHT::readHumidity(void) {
   return f;
 }
 
-float DHT::computeHeatIndex(float tempFahrenheit, float percentHumidity) {
+//boolean isFahrenheit: True == Fahrenheit; False == Celcius
+float DHT::computeHeatIndex(float temperature, float percentHumidity, bool isFahrenheit) {
   // Adapted from equation at: https://github.com/adafruit/DHT-sensor-library/issues/9 and
   // Wikipedia: http://en.wikipedia.org/wiki/Heat_index
-  return -42.379 +
-           2.04901523 * tempFahrenheit +
-          10.14333127 * percentHumidity +
-          -0.22475541 * tempFahrenheit*percentHumidity +
-          -0.00683783 * pow(tempFahrenheit, 2) +
-          -0.05481717 * pow(percentHumidity, 2) +
-           0.00122874 * pow(tempFahrenheit, 2) * percentHumidity +
-           0.00085282 * tempFahrenheit*pow(percentHumidity, 2) +
-          -0.00000199 * pow(tempFahrenheit, 2) * pow(percentHumidity, 2);
+  if (!isFahrenheit) {
+    // Celsius heat index calculation.
+    return -8.784695 +
+             1.61139411 * temperature +
+             2.338549   * percentHumidity +
+            -0.14611605 * temperature*percentHumidity +
+            -0.01230809 * pow(temperature, 2) +
+            -0.01642482 * pow(percentHumidity, 2) +
+             0.00221173 * pow(temperature, 2) * percentHumidity +
+             0.00072546 * temperature*pow(percentHumidity, 2) +
+            -0.00000358 * pow(temperature, 2) * pow(percentHumidity, 2);
+  }
+  else {
+    // Fahrenheit heat index calculation.
+    return -42.379 +
+             2.04901523 * temperature +
+            10.14333127 * percentHumidity +
+            -0.22475541 * temperature*percentHumidity +
+            -0.00683783 * pow(temperature, 2) +
+            -0.05481717 * pow(percentHumidity, 2) +
+             0.00122874 * pow(temperature, 2) * percentHumidity +
+             0.00085282 * temperature*pow(percentHumidity, 2) +
+            -0.00000199 * pow(temperature, 2) * pow(percentHumidity, 2);
+  }
 }
 
 boolean DHT::read(void) {
