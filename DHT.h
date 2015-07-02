@@ -57,4 +57,15 @@ class DHT {
 
 };
 
+class InterruptLock {
+  public:
+   InterruptLock() {
+    noInterrupts();
+   }
+   ~InterruptLock() {
+    interrupts();
+   }
+
+};
+
 #endif

@@ -140,62 +140,63 @@ boolean DHT::read(void) {
 
   // Turn off interrupts temporarily because the next sections are timing critical
   // and we don't want any interruptions.
-  noInterrupts();
+  {
+    InterruptLock lock;
 
-  // End the start signal by setting data line high for 40 microseconds.
-  digitalWrite(_pin, HIGH);
-  delayMicroseconds(40);
+    // End the start signal by setting data line high for 40 microseconds.
+    digitalWrite(_pin, HIGH);
+    delayMicroseconds(40);
 
-  // Now start reading the data line to get the value from the DHT sensor.
-  pinMode(_pin, INPUT);
-  delayMicroseconds(10);  // Delay a bit to let sensor pull data line low.
+    // Now start reading the data line to get the value from the DHT sensor.
+    pinMode(_pin, INPUT);
+    delayMicroseconds(10);  // Delay a bit to let sensor pull data line low.
 
-  // First expect a low signal for ~80 microseconds followed by a high signal
-  // for ~80 microseconds again.
-  if (expectPulse(LOW) == 0) {
-    DEBUG_PRINTLN(F("Timeout waiting for start signal low pulse."));
-    _lastresult = false;
-    return _lastresult;
-  }
-  if (expectPulse(HIGH) == 0) {
-    DEBUG_PRINTLN(F("Timeout waiting for start signal high pulse."));
-    _lastresult = false;
-    return _lastresult;
-  }
-
-  // Now read the 40 bits sent by the sensor.  Each bit is sent as a 50
-  // microsecond low pulse followed by a variable length high pulse.  If the
-  // high pulse is ~28 microseconds then it's a 0 and if it's ~70 microseconds
-  // then it's a 1.  We measure the cycle count of the initial 50us low pulse
-  // and use that to compare to the cycle count of the high pulse to determine
-  // if the bit is a 0 (high state cycle count < low state cycle count), or a
-  // 1 (high state cycle count > low state cycle count).
-  for (int i=0; i<40; ++i) {
-    uint32_t lowCycles = expectPulse(LOW);
-    if (lowCycles == 0) {
-      DEBUG_PRINTLN(F("Timeout waiting for bit low pulse."));
+    // First expect a low signal for ~80 microseconds followed by a high signal
+    // for ~80 microseconds again.
+    if (expectPulse(LOW) == 0) {
+      DEBUG_PRINTLN(F("Timeout waiting for start signal low pulse."));
       _lastresult = false;
       return _lastresult;
     }
-    uint32_t highCycles = expectPulse(HIGH);
-    if (highCycles == 0) {
-      DEBUG_PRINTLN(F("Timeout waiting for bit high pulse."));
+    if (expectPulse(HIGH) == 0) {
+      DEBUG_PRINTLN(F("Timeout waiting for start signal high pulse."));
       _lastresult = false;
       return _lastresult;
     }
-    data[i/8] <<= 1;
-    // Now compare the low and high cycle times to see if the bit is a 0 or 1.
-    if (highCycles > lowCycles) {
-      // High cycles are greater than 50us low cycle count, must be a 1.
-      data[i/8] |= 1;
-    }
-    // Else high cycles are less than (or equal to, a weird case) the 50us low
-    // cycle count so this must be a zero.  Nothing needs to be changed in the
-    // stored data.
-  }
 
-  // Re-enable interrupts, timing critical code is complete.
-  interrupts();
+    // Now read the 40 bits sent by the sensor.  Each bit is sent as a 50
+    // microsecond low pulse followed by a variable length high pulse.  If the
+    // high pulse is ~28 microseconds then it's a 0 and if it's ~70 microseconds
+    // then it's a 1.  We measure the cycle count of the initial 50us low pulse
+    // and use that to compare to the cycle count of the high pulse to determine
+    // if the bit is a 0 (high state cycle count < low state cycle count), or a
+    // 1 (high state cycle count > low state cycle count).
+    for (int i=0; i<40; ++i) {
+      uint32_t lowCycles = expectPulse(LOW);
+      if (lowCycles == 0) {
+        DEBUG_PRINTLN(F("Timeout waiting for bit low pulse."));
+        _lastresult = false;
+        return _lastresult;
+      }
+      uint32_t highCycles = expectPulse(HIGH);
+      if (highCycles == 0) {
+        DEBUG_PRINTLN(F("Timeout waiting for bit high pulse."));
+        _lastresult = false;
+        return _lastresult;
+      }
+      data[i/8] <<= 1;
+      // Now compare the low and high cycle times to see if the bit is a 0 or 1.
+      if (highCycles > lowCycles) {
+        // High cycles are greater than 50us low cycle count, must be a 1.
+        data[i/8] |= 1;
+      }
+      // Else high cycles are less than (or equal to, a weird case) the 50us low
+      // cycle count so this must be a zero.  Nothing needs to be changed in the
+      // stored data.
+    }
+    // Timing critical code is now complete.
+
+  }
 
   DEBUG_PRINTLN(F("Received:"));
   DEBUG_PRINT(data[0], HEX); DEBUG_PRINT(F(", "));
