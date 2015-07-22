@@ -10,6 +10,10 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   _pin = pin;
   _type = type;
   _firstreading = true;
+  _bit = digitalPinToBitMask(pin);
+  _port = digitalPinToPort(pin);
+  _maxcycles = microsecondsToClockCycles(1000);  // 1 millisecond timeout for
+                                                 // reading pulses from DHT sensor.
   // Note that count is now ignored as the DHT reading algorithm adjusts itself
   // basd on the speed of the processor.
 }
@@ -19,6 +23,7 @@ void DHT::begin(void) {
   pinMode(_pin, INPUT);
   digitalWrite(_pin, HIGH);
   _lastreadtime = 0;
+  DEBUG_PRINT("Max clock cycles: "); DEBUG_PRINTLN(_maxcycles, DEC);
 }
 
 //boolean S == Scale.  True == Fahrenheit; False == Celcius
@@ -169,17 +174,24 @@ boolean DHT::read(void) {
   // then it's a 1.  We measure the cycle count of the initial 50us low pulse
   // and use that to compare to the cycle count of the high pulse to determine
   // if the bit is a 0 (high state cycle count < low state cycle count), or a
-  // 1 (high state cycle count > low state cycle count).
+  // 1 (high state cycle count > low state cycle count). Note that for speed all
+  // the pulses are read into a array and then examined in a later step.
+  uint32_t cycles[80];
+  for (int i=0; i<80; i+=2) {
+    cycles[i]   = expectPulse(LOW);
+    cycles[i+1] = expectPulse(HIGH);
+  }
+
+  // Re-enable interrupts, timing critical code is complete.
+  interrupts();
+
+  // Inspect pulses and determine which ones are 0 (high state cycle count < low
+  // state cycle count), or 1 (high state cycle count > low state cycle count).
   for (int i=0; i<40; ++i) {
-    uint32_t lowCycles = expectPulse(LOW);
-    if (lowCycles == 0) {
-      DEBUG_PRINTLN(F("Timeout waiting for bit low pulse."));
-      _lastresult = false;
-      return _lastresult;
-    }
-    uint32_t highCycles = expectPulse(HIGH);
-    if (highCycles == 0) {
-      DEBUG_PRINTLN(F("Timeout waiting for bit high pulse."));
+    uint32_t lowCycles  = cycles[2*i];
+    uint32_t highCycles = cycles[2*i+1];
+    if ((lowCycles == 0) || (highCycles == 0)) {
+      DEBUG_PRINTLN(F("Timeout waiting for pulse."));
       _lastresult = false;
       return _lastresult;
     }
@@ -194,16 +206,13 @@ boolean DHT::read(void) {
     // stored data.
   }
 
-  // Re-enable interrupts, timing critical code is complete.
-  interrupts();
-
   DEBUG_PRINTLN(F("Received:"));
   DEBUG_PRINT(data[0], HEX); DEBUG_PRINT(F(", "));
   DEBUG_PRINT(data[1], HEX); DEBUG_PRINT(F(", "));
   DEBUG_PRINT(data[2], HEX); DEBUG_PRINT(F(", "));
   DEBUG_PRINT(data[3], HEX); DEBUG_PRINT(F(", "));
   DEBUG_PRINT(data[4], HEX); DEBUG_PRINT(F(" =? "));
-  DEBUG_PRINTLN(data[0] + data[1] + data[2] + data[3], HEX);
+  DEBUG_PRINTLN((data[0] + data[1] + data[2] + data[3]) & 0xFF, HEX);
 
   // Check we read 40 bits and that the checksum matches.
   if (data[4] == ((data[0] + data[1] + data[2] + data[3]) & 0xFF)) {
@@ -221,16 +230,29 @@ boolean DHT::read(void) {
 // return a count of loop cycles spent at that level (this cycle count can be
 // used to compare the relative time of two pulses).  If more than a millisecond
 // ellapses without the level changing then the call fails with a 0 response.
+// This is adapted from Arduino's pulseInLong function (which is only available
+// in the very latest IDE versions):
+//   https://github.com/arduino/Arduino/blob/master/hardware/arduino/avr/cores/arduino/wiring_pulse.c
 uint32_t DHT::expectPulse(bool level) {
   uint32_t count = 0;
-  uint32_t end = micros() + 1000;
-  // Loop while counting cycles until the level changes.
-  while (digitalRead(_pin) == level) {
-    count++;
-    if (micros() >= end) {
-      // Exceeded timeout waiting for level to change, fail.
-      return 0;
+  // On AVR platforms use direct GPIO port access as it's much faster and better
+  // for catching pulses that are 10's of microseconds in length:
+  #ifdef __AVR
+    uint8_t portState = level ? _bit : 0;
+    while ((*portInputRegister(_port) & _bit) == portState) {
+      if (count++ >= _maxcycles) {
+        return 0; // Exceeded timeout, fail.
+      }
     }
-  }
+  // Otherwise fall back to using digitalRead (this seems to be necessary on ESP8266
+  // right now, perhaps bugs in direct port access functions?).
+  #else
+    while (digitalRead(_pin) == level) {
+      if (count++ >= _maxcycles) {
+        return 0; // Exceeded timeout, fail.
+      }
+    }
+  #endif
+
   return count;
 }
