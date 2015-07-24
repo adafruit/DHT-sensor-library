@@ -21,8 +21,7 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
 
 void DHT::begin(void) {
   // set up the pins!
-  pinMode(_pin, INPUT);
-  digitalWrite(_pin, HIGH);
+  pinMode(_pin, INPUT_PULLUP);
   // Using this value makes sure that millis() - lastreadtime will be
   // >= MIN_INTERVAL right away. Note that this assignment wraps around,
   // but so will the subtraction.
@@ -153,7 +152,7 @@ boolean DHT::read(bool force) {
     delayMicroseconds(40);
 
     // Now start reading the data line to get the value from the DHT sensor.
-    pinMode(_pin, INPUT);
+    pinMode(_pin, INPUT_PULLUP);
     delayMicroseconds(10);  // Delay a bit to let sensor pull data line low.
 
     // First expect a low signal for ~80 microseconds followed by a high signal
