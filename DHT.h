@@ -47,7 +47,7 @@ class DHT {
    boolean read(bool force=false);
 
  private:
-  uint8_t data[6];
+  uint8_t data[5];
   uint8_t _pin, _type, _bit, _port;
   uint32_t _lastreadtime, _maxcycles;
   bool _lastresult;
