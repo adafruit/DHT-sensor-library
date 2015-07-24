@@ -27,10 +27,10 @@ void DHT::begin(void) {
 }
 
 //boolean S == Scale.  True == Fahrenheit; False == Celcius
-float DHT::readTemperature(bool S) {
+float DHT::readTemperature(bool S, bool force) {
   float f = NAN;
 
-  if (read()) {
+  if (read(force)) {
     switch (_type) {
     case DHT11:
       f = data[2];
@@ -64,7 +64,7 @@ float DHT::convertFtoC(float f) {
   return (f - 32) * 5 / 9;
 }
 
-float DHT::readHumidity(void) {
+float DHT::readHumidity(bool force) {
   float f = NAN;
   if (read()) {
     switch (_type) {
@@ -113,7 +113,7 @@ float DHT::computeHeatIndex(float temperature, float percentHumidity, bool isFah
   }
 }
 
-boolean DHT::read(void) {
+boolean DHT::read(bool force) {
   // Check if sensor was read less than two seconds ago and return early
   // to use last reading.
   uint32_t currenttime = millis();
@@ -121,7 +121,7 @@ boolean DHT::read(void) {
     // ie there was a rollover
     _lastreadtime = 0;
   }
-  if (!_firstreading && ((currenttime - _lastreadtime) < 2000)) {
+  if (!force && !_firstreading && ((currenttime - _lastreadtime) < 2000)) {
     return _lastresult; // return last correct measurement
   }
   _firstreading = false;
