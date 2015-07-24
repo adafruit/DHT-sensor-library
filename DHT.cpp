@@ -6,10 +6,11 @@ written by Adafruit Industries
 
 #include "DHT.h"
 
+#define MIN_INTERVAL 2000
+
 DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   _pin = pin;
   _type = type;
-  _firstreading = true;
   _bit = digitalPinToBitMask(pin);
   _port = digitalPinToPort(pin);
   _maxcycles = microsecondsToClockCycles(1000);  // 1 millisecond timeout for
@@ -22,7 +23,10 @@ void DHT::begin(void) {
   // set up the pins!
   pinMode(_pin, INPUT);
   digitalWrite(_pin, HIGH);
-  _lastreadtime = 0;
+  // Using this value makes sure that millis() - lastreadtime will be
+  // >= MIN_INTERVAL right away. Note that this assignment wraps around,
+  // but so will the subtraction.
+  _lastreadtime = -MIN_INTERVAL;
   DEBUG_PRINT("Max clock cycles: "); DEBUG_PRINTLN(_maxcycles, DEC);
 }
 
@@ -117,10 +121,9 @@ boolean DHT::read(bool force) {
   // Check if sensor was read less than two seconds ago and return early
   // to use last reading.
   uint32_t currenttime = millis();
-  if (!force && !_firstreading && ((currenttime - _lastreadtime) < 2000)) {
+  if (!force && ((currenttime - _lastreadtime) < 2000)) {
     return _lastresult; // return last correct measurement
   }
-  _firstreading = false;
   _lastreadtime = currenttime;
 
   // Reset 40 bits of received data to zero.
