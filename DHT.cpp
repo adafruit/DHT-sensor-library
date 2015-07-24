@@ -117,15 +117,11 @@ boolean DHT::read(bool force) {
   // Check if sensor was read less than two seconds ago and return early
   // to use last reading.
   uint32_t currenttime = millis();
-  if (currenttime < _lastreadtime) {
-    // ie there was a rollover
-    _lastreadtime = 0;
-  }
   if (!force && !_firstreading && ((currenttime - _lastreadtime) < 2000)) {
     return _lastresult; // return last correct measurement
   }
   _firstreading = false;
-  _lastreadtime = millis();
+  _lastreadtime = currenttime;
 
   // Reset 40 bits of received data to zero.
   data[0] = data[1] = data[2] = data[3] = data[4] = 0;
