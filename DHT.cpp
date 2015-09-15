@@ -6,10 +6,11 @@ written by Adafruit Industries
 
 #include "DHT.h"
 
+#define MIN_INTERVAL 2000
+
 DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   _pin = pin;
   _type = type;
-  _firstreading = true;
   _bit = digitalPinToBitMask(pin);
   _port = digitalPinToPort(pin);
   _maxcycles = microsecondsToClockCycles(1000);  // 1 millisecond timeout for
@@ -20,17 +21,19 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
 
 void DHT::begin(void) {
   // set up the pins!
-  pinMode(_pin, INPUT);
-  digitalWrite(_pin, HIGH);
-  _lastreadtime = 0;
+  pinMode(_pin, INPUT_PULLUP);
+  // Using this value makes sure that millis() - lastreadtime will be
+  // >= MIN_INTERVAL right away. Note that this assignment wraps around,
+  // but so will the subtraction.
+  _lastreadtime = -MIN_INTERVAL;
   DEBUG_PRINT("Max clock cycles: "); DEBUG_PRINTLN(_maxcycles, DEC);
 }
 
 //boolean S == Scale.  True == Fahrenheit; False == Celcius
-float DHT::readTemperature(bool S) {
+float DHT::readTemperature(bool S, bool force) {
   float f = NAN;
 
-  if (read()) {
+  if (read(force)) {
     switch (_type) {
     case DHT11:
       f = data[2];
@@ -64,7 +67,7 @@ float DHT::convertFtoC(float f) {
   return (f - 32) * 5 / 9;
 }
 
-float DHT::readHumidity(void) {
+float DHT::readHumidity(bool force) {
   float f = NAN;
   if (read()) {
     switch (_type) {
@@ -113,19 +116,14 @@ float DHT::computeHeatIndex(float temperature, float percentHumidity, bool isFah
   }
 }
 
-boolean DHT::read(void) {
+boolean DHT::read(bool force) {
   // Check if sensor was read less than two seconds ago and return early
   // to use last reading.
   uint32_t currenttime = millis();
-  if (currenttime < _lastreadtime) {
-    // ie there was a rollover
-    _lastreadtime = 0;
-  }
-  if (!_firstreading && ((currenttime - _lastreadtime) < 2000)) {
+  if (!force && ((currenttime - _lastreadtime) < 2000)) {
     return _lastresult; // return last correct measurement
   }
-  _firstreading = false;
-  _lastreadtime = millis();
+  _lastreadtime = currenttime;
 
   // Reset 40 bits of received data to zero.
   data[0] = data[1] = data[2] = data[3] = data[4] = 0;
@@ -154,7 +152,7 @@ boolean DHT::read(void) {
     delayMicroseconds(40);
 
     // Now start reading the data line to get the value from the DHT sensor.
-    pinMode(_pin, INPUT);
+    pinMode(_pin, INPUT_PULLUP);
     delayMicroseconds(10);  // Delay a bit to let sensor pull data line low.
 
     // First expect a low signal for ~80 microseconds followed by a high signal
