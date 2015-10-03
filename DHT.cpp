@@ -109,10 +109,10 @@ float DHT::computeHeatIndex(float temperature, float percentHumidity, bool isFah
             -0.00000199 * pow(temperature, 2) * pow(percentHumidity, 2);
 
     if((percentHumidity < 13) && (temperature >= 80.0) && (temperature <= 112.0))
-      hi -= ((13.0 - percentHumidity) / 4.0) * sqrt((17.0 - abs(temperature - 95.0))/17.0);
+      hi -= ((13.0 - percentHumidity) * 0.25) * sqrt((17.0 - abs(temperature - 95.0)) * 0.05882);
 
     else if((percentHumidity > 85.0) && (temperature >= 80.0) && (temperature <= 87.0))
-      hi += ((percentHumidity - 85.0) / 10.0) * ((87.0 - temperature)/5.0);
+      hi += ((percentHumidity - 85.0) * 0.1) * ((87.0 - temperature) * 0.2);
   }
 
   return isFahrenheit ? hi : convertFtoC(hi);
