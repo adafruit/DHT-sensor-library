@@ -46,7 +46,7 @@ float DHT::readTemperature(bool S, bool force) {
       f = data[2] & 0x7F;
       f *= 256;
       f += data[3];
-      f /= 10;
+      f *= 0.1;
       if (data[2] & 0x80) {
         f *= -1;
       }
@@ -60,11 +60,11 @@ float DHT::readTemperature(bool S, bool force) {
 }
 
 float DHT::convertCtoF(float c) {
-  return c * 9 / 5 + 32;
+  return c * 1.8 + 32;
 }
 
 float DHT::convertFtoC(float f) {
-  return (f - 32) * 5 / 9;
+  return (f - 32) * 0.55555;
 }
 
 float DHT::readHumidity(bool force) {
@@ -79,7 +79,7 @@ float DHT::readHumidity(bool force) {
       f = data[0];
       f *= 256;
       f += data[1];
-      f /= 10;
+      f *= 0.1;
       break;
     }
   }
@@ -194,11 +194,11 @@ boolean DHT::read(bool force) {
       _lastresult = false;
       return _lastresult;
     }
-    data[i/8] <<= 1;
+    data[i * 0.125] <<= 1;
     // Now compare the low and high cycle times to see if the bit is a 0 or 1.
     if (highCycles > lowCycles) {
       // High cycles are greater than 50us low cycle count, must be a 1.
-      data[i/8] |= 1;
+      data[i * 0.125] |= 1;
     }
     // Else high cycles are less than (or equal to, a weird case) the 50us low
     // cycle count so this must be a zero.  Nothing needs to be changed in the
