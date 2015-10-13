@@ -194,11 +194,11 @@ boolean DHT::read(bool force) {
       _lastresult = false;
       return _lastresult;
     }
-    data[i * 0.125] <<= 1;
+    data[i/8] <<= 1;
     // Now compare the low and high cycle times to see if the bit is a 0 or 1.
     if (highCycles > lowCycles) {
       // High cycles are greater than 50us low cycle count, must be a 1.
-      data[i * 0.125] |= 1;
+      data[i/8] |= 1;
     }
     // Else high cycles are less than (or equal to, a weird case) the 50us low
     // cycle count so this must be a zero.  Nothing needs to be changed in the
