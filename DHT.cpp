@@ -46,7 +46,7 @@ float DHT::readTemperature(bool S, bool force) {
       f = data[2] & 0x7F;
       f *= 256;
       f += data[3];
-      f /= 10;
+      f *= 0.1;
       if (data[2] & 0x80) {
         f *= -1;
       }
@@ -60,11 +60,11 @@ float DHT::readTemperature(bool S, bool force) {
 }
 
 float DHT::convertCtoF(float c) {
-  return c * 9 / 5 + 32;
+  return c * 1.8 + 32;
 }
 
 float DHT::convertFtoC(float f) {
-  return (f - 32) * 5 / 9;
+  return (f - 32) * 0.55555;
 }
 
 float DHT::readHumidity(bool force) {
@@ -79,7 +79,7 @@ float DHT::readHumidity(bool force) {
       f = data[0];
       f *= 256;
       f += data[1];
-      f /= 10;
+      f *= 0.1;
       break;
     }
   }
