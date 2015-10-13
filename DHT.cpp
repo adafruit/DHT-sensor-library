@@ -11,8 +11,10 @@ written by Adafruit Industries
 DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   _pin = pin;
   _type = type;
-  _bit = digitalPinToBitMask(pin);
-  _port = digitalPinToPort(pin);
+  #ifdef __AVR
+    _bit = digitalPinToBitMask(pin);
+    _port = digitalPinToPort(pin);
+  #endif
   _maxcycles = microsecondsToClockCycles(1000);  // 1 millisecond timeout for
                                                  // reading pulses from DHT sensor.
   // Note that count is now ignored as the DHT reading algorithm adjusts itself
@@ -95,7 +97,7 @@ float DHT::computeHeatIndex(float temperature, float percentHumidity, bool isFah
   if (!isFahrenheit)
     temperature = convertCtoF(temperature);
 
-  hi = 0.5 * (temperature + 61.0 + ((temperature - 68.0) * 1.2) + (percentHumidity * 0.094)); 
+  hi = 0.5 * (temperature + 61.0 + ((temperature - 68.0) * 1.2) + (percentHumidity * 0.094));
 
   if (hi > 79) {
     hi = -42.379 +
