@@ -38,6 +38,7 @@ written by Adafruit Industries
 class DHT {
   public:
    DHT(uint8_t pin, uint8_t type, uint8_t count=6);
+   DHT(uint8_t pin, uint8_t type);
    void begin(void);
    float readTemperature(bool S=false, bool force=false);
    float convertCtoF(float);
@@ -59,6 +60,7 @@ class DHT {
 
   uint32_t expectPulse(bool level);
 
+  void _init(uint8_t pin, uint8_t type);
 };
 
 class InterruptLock {
