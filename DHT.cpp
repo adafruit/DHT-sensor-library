@@ -8,26 +8,16 @@ written by Adafruit Industries
 
 #define MIN_INTERVAL 2000
 
-/*
- * Old constructor left in for backwards compatability.
- */
-DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
-  DHT::_init(pin, type);
-  // Note that count is now ignored as the DHT reading algorithm adjusts itself
-  // based on the speed of the processor.
-}
+// Old constructor.
+//DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
 
 /*
  * New constructor.
+ *
+ * Note that count is now ignored as the DHT reading algorithm adjusts itself
+ * based on the speed of the processor.
  */
 DHT::DHT(uint8_t pin, uint8_t type) {
-  DHT::_init(pin, type);
-}
-
-/*
- * Common class initialization code.
- */
-void DHT::_init(uint8_t pin, uint8_t type) {
   _pin = pin;
   _type = type;
   #ifdef __AVR

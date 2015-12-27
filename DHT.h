@@ -37,7 +37,11 @@ written by Adafruit Industries
 
 class DHT {
   public:
-   DHT(uint8_t pin, uint8_t type, uint8_t count=6);
+   // Note that count is now ignored as the DHT reading algorithm adjusts itself
+   // based on the speed of the processor.
+   DHT(uint8_t pin, uint8_t type, uint8_t count) {
+     DHT(pin, type);
+   };
    DHT(uint8_t pin, uint8_t type);
    void begin(void);
    float readTemperature(bool S=false, bool force=false);
