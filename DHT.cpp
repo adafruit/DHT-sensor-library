@@ -27,7 +27,7 @@ void DHT::begin(void) {
   // Using this value makes sure that millis() - lastreadtime will be
   // >= MIN_INTERVAL right away. Note that this assignment wraps around,
   // but so will the subtraction.
-  _lastreadtime = -MIN_INTERVAL;
+  _lastreadtime = millis()-MIN_INTERVAL;
   DEBUG_PRINT("Max clock cycles: "); DEBUG_PRINTLN(_maxcycles, DEC);
 }
 
