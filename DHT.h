@@ -44,9 +44,21 @@ class DHT {
    };
    DHT(uint8_t pin, uint8_t type);
    void begin(void);
+   float readFahrenheit(bool force=false) {
+       return readTemperature(true, force);
+   };
+   float readCelcius(bool force=false) {
+       return readTemperature(false, force);
+   };
    float readTemperature(bool S=false, bool force=false);
    float convertCtoF(float);
    float convertFtoC(float);
+   float computeHeatIndexFahrenheit(float temperature, float percentHumidity) {
+       return computeHeatIndex(temperature, percentHumidity, true);
+   };
+   float computeHeatIndexCelcius(float temperature, float percentHumidity) {
+       return computeHeatIndex(temperature, percentHumidity, false);
+   };
    float computeHeatIndex(float temperature, float percentHumidity, bool isFahrenheit=true);
    float readHumidity(bool force=false);
    boolean read(bool force=false);
