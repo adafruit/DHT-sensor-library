@@ -18,7 +18,8 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   _maxcycles = microsecondsToClockCycles(1000);  // 1 millisecond timeout for
                                                  // reading pulses from DHT sensor.
   // Note that count is now ignored as the DHT reading algorithm adjusts itself
-  // basd on the speed of the processor.
+  // based on the speed of the processor.
+  (void)count;
 }
 
 void DHT::begin(void) {
@@ -71,7 +72,7 @@ float DHT::convertFtoC(float f) {
 
 float DHT::readHumidity(bool force) {
   float f = NAN;
-  if (read()) {
+  if (read(force)) {
     switch (_type) {
     case DHT11:
       f = data[0];
