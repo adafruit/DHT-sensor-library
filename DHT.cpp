@@ -135,11 +135,6 @@ boolean DHT::read(bool force) {
   // Send start signal.  See DHT datasheet for full signal diagram:
   //   http://www.adafruit.com/datasheets/Digital%20humidity%20and%20temperature%20sensor%20AM2302.pdf
 
-  // Go into high impedence state to let pull-up raise data line level and
-  // start the reading process.
-  digitalWrite(_pin, HIGH);
-  delay(250);
-
   // First set data line low for 20 milliseconds.
   pinMode(_pin, OUTPUT);
   digitalWrite(_pin, LOW);
@@ -149,23 +144,42 @@ boolean DHT::read(bool force) {
   {
     // Turn off interrupts temporarily because the next sections are timing critical
     // and we don't want any interruptions.
+    // NOTE: From this point we cannot use function such as delay(), delayMicroseconds(), 
+    //       Those functions among others rely on interrupts.  
     InterruptLock lock;
 
-    // End the start signal by setting data line high for 40 microseconds.
-    digitalWrite(_pin, HIGH);
-    delayMicroseconds(40);
-
+    // End of the start signal.
     // Now start reading the data line to get the value from the DHT sensor.
     pinMode(_pin, INPUT_PULLUP);
-    delayMicroseconds(10);  // Delay a bit to let sensor pull data line low.
+    // from this point we listen, it's sensor's turn to talk.  
 
-    // First expect a low signal for ~80 microseconds followed by a high signal
-    // for ~80 microseconds again.
+
+    // The following step is a busy-wait loop to continue only 
+    // when the data line has been pulled LOW by the sensor.  
+    //
+    // To avoid infinite loops here, we use a counter as a timeout.
+    // 700 iterations is about 4 ms on a 16Mhz processor.  The sensor should
+    // set the pin LOW within 20 to 40 microseconds.
+    // The (F_CPU / 16000000) is a ratio to keep the timeout to approximately
+    // the same period if processor used has different frequency.
+    unsigned long timesup = (F_CPU / 16000000) * 700;  
+    unsigned long count = 0;
+    while (digitalRead(_pin) == HIGH && ++count < timesup)
+        ;
+    if (count == timesup) {
+      DEBUG_PRINTLN(F("Timeout waiting sensor to pull the data line LOW."));
+      _lastresult = false;
+      return _lastresult;
+    }
+
+    // expect a low signal for ~80 microseconds. 
     if (expectPulse(LOW) == 0) {
       DEBUG_PRINTLN(F("Timeout waiting for start signal low pulse."));
       _lastresult = false;
       return _lastresult;
     }
+    
+    // followed by a high signal for ~80 microseconds.
     if (expectPulse(HIGH) == 0) {
       DEBUG_PRINTLN(F("Timeout waiting for start signal high pulse."));
       _lastresult = false;
@@ -184,7 +198,8 @@ boolean DHT::read(bool force) {
       cycles[i]   = expectPulse(LOW);
       cycles[i+1] = expectPulse(HIGH);
     }
-  } // Timing critical code is now complete.
+    // Interrupts will turn back on when exiting this scope.
+  } // Timing critical code is now complete.  
 
   // Inspect pulses and determine which ones are 0 (high state cycle count < low
   // state cycle count), or 1 (high state cycle count > low state cycle count).
