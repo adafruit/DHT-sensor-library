@@ -71,7 +71,7 @@ float DHT::convertFtoC(float f) {
 
 float DHT::readHumidity(bool force) {
   float f = NAN;
-  if (read()) {
+  if (read(force)) {
     switch (_type) {
     case DHT11:
       f = data[0];
