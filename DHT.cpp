@@ -21,6 +21,19 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   // basd on the speed of the processor.
 }
 
+//add begin with device type, so device type can be set in SETUP() after being read from a config source
+void DHT::begin(uint8_t type) {
+  // set up the pins!
+  pinMode(_pin, INPUT_PULLUP);
+  _type = type;
+  // Using this value makes sure that millis() - lastreadtime will be
+  // >= MIN_INTERVAL right away. Note that this assignment wraps around,
+  // but so will the subtraction.
+  _lastreadtime = -MIN_INTERVAL;
+  DEBUG_PRINT("Max clock cycles: "); DEBUG_PRINTLN(_maxcycles, DEC);
+}
+
+
 void DHT::begin(void) {
   // set up the pins!
   pinMode(_pin, INPUT_PULLUP);
@@ -30,6 +43,8 @@ void DHT::begin(void) {
   _lastreadtime = -MIN_INTERVAL;
   DEBUG_PRINT("Max clock cycles: "); DEBUG_PRINTLN(_maxcycles, DEC);
 }
+
+
 
 //boolean S == Scale.  True == Fahrenheit; False == Celcius
 float DHT::readTemperature(bool S, bool force) {

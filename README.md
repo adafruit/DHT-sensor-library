@@ -13,3 +13,7 @@ which is designed to work with the [Adafruit unified sensor library](https://lea
 You must have the following Arduino libraries installed to use this class:
 
 - [Adafruit Unified Sensor Library](https://github.com/adafruit/Adafruit_Sensor)
+
+
+ADD Ability to change sensor type after instantiation for use with a configuraable PCB i am developing
+void DHT::begin(uint8_t type);
