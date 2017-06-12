@@ -21,6 +21,7 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   // basd on the speed of the processor.
 }
 
+//add begin with device type, so device type can be set in SETUP() after being read from a config source
 void DHT::begin(uint8_t type) {
   // set up the pins!
   pinMode(_pin, INPUT_PULLUP);
