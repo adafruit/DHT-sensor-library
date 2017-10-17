@@ -31,15 +31,15 @@ void DHT::begin(void) {
   DEBUG_PRINT("Max clock cycles: "); DEBUG_PRINTLN(_maxcycles, DEC);
 }
 
-//boolean S == Scale.  True == Fahrenheit; False == Celcius
-float DHT::readTemperature(bool S, bool force) {
+//boolean isFahrenheit: True == Fahrenheit; False == Celcius
+float DHT::readTemperature(bool isFahrenheit, bool force) {
   float f = NAN;
 
   if (read(force)) {
     switch (_type) {
     case DHT11:
       f = data[2];
-      if(S) {
+      if(isFahrenheit) {
         f = convertCtoF(f);
       }
       break;
@@ -52,7 +52,7 @@ float DHT::readTemperature(bool S, bool force) {
       if (data[2] & 0x80) {
         f *= -1;
       }
-      if(S) {
+      if(isFahrenheit) {
         f = convertCtoF(f);
       }
       break;
