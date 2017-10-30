@@ -29,7 +29,7 @@ written by Adafruit Industries
 #endif
 
 // Define types of sensors.
-#define DHT11 11
+#define DHT18 18
 #define DHT22 22
 #define DHT21 21
 #define AM2301 21
