@@ -235,25 +235,30 @@ boolean DHT::read(bool force) {
 // in the very latest IDE versions):
 //   https://github.com/arduino/Arduino/blob/master/hardware/arduino/avr/cores/arduino/wiring_pulse.c
 uint32_t DHT::expectPulse(bool level) {
-  uint32_t count = 0;
-  // On AVR platforms use direct GPIO port access as it's much faster and better
-  // for catching pulses that are 10's of microseconds in length:
   #ifdef __AVR
+    uint32_t count = 0;
+    // On AVR platforms use direct GPIO port access as it's much faster and better
+    // for catching pulses that are 10's of microseconds in length:
     uint8_t portState = level ? _bit : 0;
     while ((*portInputRegister(_port) & _bit) == portState) {
       if (count++ >= _maxcycles) {
         return 0; // Exceeded timeout, fail.
       }
     }
-  // Otherwise fall back to using digitalRead (this seems to be necessary on ESP8266
-  // right now, perhaps bugs in direct port access functions?).
+    return count;
   #else
+    // Otherwise fall back to using digitalRead (this seems to be necessary on ESP8266
+    // right now, perhaps bugs in direct port access functions?).
+    unsigned long start = micros();
+    unsigned long end = start;
     while (digitalRead(_pin) == level) {
-      if (count++ >= _maxcycles) {
+      end = micros();
+      // When micros() wraps, we return failure. That should happen
+      // infrequently enough that it's not a big deal.
+      if (end - start >= _maxcycles || start > end) {
         return 0; // Exceeded timeout, fail.
       }
     }
+    return end - start;
   #endif
-
-  return count;
 }
