@@ -64,6 +64,8 @@ class DHT {
 class InterruptLock {
   public:
    InterruptLock() {
+    // This is a nop on my esp32 Arduino system. noInterrupts() is defined to
+    // cli(), which is empty.
     noInterrupts();
    }
    ~InterruptLock() {
