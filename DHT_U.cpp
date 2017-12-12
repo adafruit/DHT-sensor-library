@@ -61,7 +61,7 @@ void DHT_Unified::setMinDelay(sensor_t* sensor) {
       sensor->min_delay = 1000000L;  // 1 second (in microseconds)
       break;
     case DHT12:
-      sensor->min_delay = 2000000L;  // 1 second (in microseconds)
+      sensor->min_delay = 2000000L;  // 2 second (in microseconds)
       break;
     case DHT21:
       sensor->min_delay = 2000000L;  // 2 seconds (in microseconds)
