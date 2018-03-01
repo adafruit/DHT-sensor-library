@@ -59,6 +59,8 @@ class DHT {
   uint32_t _lastreadtime, _maxcycles;
   bool _lastresult;
 
+  float _temperature, _humidity;
+
   enum readingStatus{
     IDLE,
     WAITING,

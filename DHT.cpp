@@ -34,28 +34,10 @@ void DHT::begin(void) {
 //boolean S == Scale.  True == Fahrenheit; False == Celcius
 float DHT::readTemperature(bool S, bool force) {
   //Argument <<force>> is kept only for back-compatibility
-  if (this->_lastresult){
-    float f;
-    switch (_type) {
-      case DHT11:
-        f = data[2];
-        break;
-      case DHT22:
-      case DHT21:
-        f = data[2] & 0x7F;
-        f *= 256;
-        f += data[3];
-        f *= 0.1;
-        if (data[2] & 0x80) {
-          f *= -1;
-        }
-        break;
-    }
-    if(S) f = convertCtoF(f);
-    return f;
-  }else{
-    return (float) NAN;
-  }
+  if(S) 
+    return this->convertCtoF(this->_temperature);
+  else
+    return this->_temperature;
 }
 
 float DHT::convertCtoF(float c) {
@@ -67,25 +49,8 @@ float DHT::convertFtoC(float f) {
 }
 
 float DHT::readHumidity(bool force) {
-  //Argument is kept only for back-compatibility
-  if (this->_lastresult){
-    float f;
-    switch (_type) {
-      case DHT11:
-        f = data[0];
-        break;
-      case DHT22:
-      case DHT21:
-        f = data[0];
-        f *= 256;
-        f += data[1];
-        f *= 0.1;
-        break;
-      }
-    return f;
-  }else{
-    return (float)NAN;
-  }
+  //Argument <<force>> is kept only for back-compatibility
+  return this->_humidity;
 }
 
 //boolean isFahrenheit: True == Fahrenheit; False == Celcius
@@ -240,6 +205,20 @@ boolean DHT::read() {
 
   // Check we read 40 bits and that the checksum matches.
   if (data[4] == ((data[0] + data[1] + data[2] + data[3]) & 0xFF)) {
+    float t,h;
+    switch (_type) {
+      case DHT11:
+        this->_temperature = data[2];
+        this->_humidity = data[0];
+        break;
+      case DHT22:
+      case DHT21:
+        t = (data[2] & 0x7F) * 256 + data[3];
+        this->_temperature = t * 0.1 * ((data[2] & 0x80) ? -1 : 1);
+        h = data[0] * 256 + data[1];
+        this->_humidity = h * 0.1;
+        break;
+    }
     _lastresult = true;
     return _lastresult;
   }
