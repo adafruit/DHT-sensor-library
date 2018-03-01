@@ -34,7 +34,7 @@ void DHT::begin(void) {
 //boolean S == Scale.  True == Fahrenheit; False == Celcius
 float DHT::readTemperature(bool S, bool force) {
   //Argument <<force>> is kept only for back-compatibility
-  if (this->isValid){
+  if (this->_lastresult){
     float f;
     switch (_type) {
       case DHT11:
@@ -68,7 +68,7 @@ float DHT::convertFtoC(float f) {
 
 float DHT::readHumidity(bool force) {
   //Argument is kept only for back-compatibility
-  if (this->isValid){
+  if (this->_lastresult){
     float f;
     switch (_type) {
       case DHT11:
@@ -156,10 +156,14 @@ void DHT::loop(){
     case READING:
       if((currenttime-_lastreadtime) < 20)
         return;
-      this->isValid = this->read();
+      this->read();
       this->state = IDLE;
       
   }
+}
+
+boolean DHT::isValid(){
+  return this->_lastresult;
 }
 
 boolean DHT::read() {

@@ -45,6 +45,7 @@ class DHT {
    float computeHeatIndex(float temperature, float percentHumidity, bool isFahrenheit=true);
    float readHumidity(bool force=false);
    boolean read();
+   boolean isValid();
    void loop();
 
  private:
@@ -67,7 +68,6 @@ class DHT {
   uint32_t expectPulse(bool level);
   
   readingStatus state = IDLE;
-  bool isValid;
 
 };
 
