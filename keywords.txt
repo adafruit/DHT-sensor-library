@@ -19,4 +19,5 @@ convertFtoC KEYWORD2
 computeHeatIndex KEYWORD2
 readHumidity KEYWORD2
 read KEYWORD2
-
+loop KEYWORD2
+isValid KEYWORD2

@@ -44,7 +44,9 @@ class DHT {
    float convertFtoC(float);
    float computeHeatIndex(float temperature, float percentHumidity, bool isFahrenheit=true);
    float readHumidity(bool force=false);
-   boolean read(bool force=false);
+   boolean read();
+   boolean isValid();
+   void loop();
 
  private:
   uint8_t data[5];
@@ -57,7 +59,17 @@ class DHT {
   uint32_t _lastreadtime, _maxcycles;
   bool _lastresult;
 
+  float _temperature, _humidity;
+
+  enum readingStatus{
+    IDLE,
+    WAITING,
+    READING
+  };
+
   uint32_t expectPulse(bool level);
+  
+  readingStatus state = IDLE;
 
 };
 
