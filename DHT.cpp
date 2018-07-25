@@ -134,11 +134,20 @@ boolean DHT::read(bool force) {
 
   // Send start signal.  See DHT datasheet for full signal diagram:
   //   http://www.adafruit.com/datasheets/Digital%20humidity%20and%20temperature%20sensor%20AM2302.pdf
-
-  // First set data line low for 20 milliseconds.
+  // First set data line low to send start signal.
   pinMode(_pin, OUTPUT);
   digitalWrite(_pin, LOW);
-  delay(20);
+  // set wait time according to sensor type.
+  switch (_type) {
+    case DHT22: 
+    case DHT21: 
+      delayMicroseconds(1100);  //data sheet says at least 1ms, 1.1ms should be ok
+      break;
+    case DHT11:		 
+    default:
+      delay(20); //data sheet says at least 18ms, 20ms just to be safe
+      break;
+  }
 
   uint32_t cycles[80];
   {
@@ -154,15 +163,15 @@ boolean DHT::read(bool force) {
     // from this point we listen, it's sensor's turn to talk.  
 
 
-    // The following step is a busy-wait loop to continue only 
+    // The following step is a busy-wait loop to resume processing only 
     // when the data line has been pulled LOW by the sensor.  
     //
     // To avoid infinite loops here, we use a counter as a timeout.
     // 700 iterations is about 4 ms on a 16Mhz processor.  The sensor should
     // set the pin LOW within 20 to 40 microseconds.
-    // The (F_CPU / 16000000) is a ratio to keep the timeout to approximately
-    // the same period if processor used has different frequency.
-    unsigned long timesup = (F_CPU / 16000000) * 700;  
+    // The (F_CPU / 16000000.0) is a ratio to keep the timeout to approximately
+    // the same period if processor used runs at a different frequency.
+    unsigned long timesup = (F_CPU / 16000000.0) * 700;
     unsigned long count = 0;
     while (digitalRead(_pin) == HIGH && ++count < timesup)
         ;
