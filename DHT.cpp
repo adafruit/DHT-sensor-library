@@ -18,7 +18,7 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   _maxcycles = microsecondsToClockCycles(1000);  // 1 millisecond timeout for
                                                  // reading pulses from DHT sensor.
   // Note that count is now ignored as the DHT reading algorithm adjusts itself
-  // basd on the speed of the processor.
+  // based on the speed of the processor.
 }
 
 void DHT::begin(void) {
