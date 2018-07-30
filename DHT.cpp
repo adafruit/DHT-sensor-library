@@ -89,7 +89,13 @@ float DHT::readHumidity(bool force) {
 }
 
 //boolean isFahrenheit: True == Fahrenheit; False == Celcius
-float DHT::computeHeatIndex(float temperature, float percentHumidity, bool isFahrenheit) {
+float DHT::computeHeatIndex(isFahrenheit) {
+  float hi = self.computeHeatIndex(self.readTemperature(isFahrenheit), self.readHumidity(), isFahrenheit);
+  return isFahrenheit ? hi : convertFtoC(hi);
+}
+
+//boolean isFahrenheit: True == Fahrenheit; False == Celcius
+float DHT::computeHeatIndex(float temperature, floast percentHumidity, bool isFahrenheit) {
   // Using both Rothfusz and Steadman's equations
   // http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml
   float hi;
