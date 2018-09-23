@@ -153,11 +153,10 @@ boolean DHT::read(bool force) {
 
     // End the start signal by setting data line high for 40 microseconds.
     digitalWrite(_pin, HIGH);
-    delayMicroseconds(40);
+    pinMode(_pin, INPUT_PULLUP);
 
     // Now start reading the data line to get the value from the DHT sensor.
-    pinMode(_pin, INPUT_PULLUP);
-    delayMicroseconds(10);  // Delay a bit to let sensor pull data line low.
+    delayMicroseconds(60);  // Delay a bit to let sensor pull data line low.
 
     // First expect a low signal for ~80 microseconds followed by a high signal
     // for ~80 microseconds again.
