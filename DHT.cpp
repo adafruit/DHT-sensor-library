@@ -243,7 +243,7 @@ bool DHT::read(bool force) {
 // in the very latest IDE versions):
 //   https://github.com/arduino/Arduino/blob/master/hardware/arduino/avr/cores/arduino/wiring_pulse.c
 uint32_t DHT::expectPulse(bool level) {
-  uint32_t count = 0;
+  uint16_t count = 0;
   // On AVR platforms use direct GPIO port access as it's much faster and better
   // for catching pulses that are 10's of microseconds in length:
   #ifdef __AVR
