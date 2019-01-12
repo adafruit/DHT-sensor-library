@@ -19,7 +19,7 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   _maxcycles = microsecondsToClockCycles(1000);  // 1 millisecond timeout for
                                                  // reading pulses from DHT sensor.
   // Note that count is now ignored as the DHT reading algorithm adjusts itself
-  // basd on the speed of the processor.
+  // based on the speed of the processor.
 }
 
 void DHT::begin(void) {
@@ -92,7 +92,13 @@ float DHT::readHumidity(bool force) {
 }
 
 //boolean isFahrenheit: True == Fahrenheit; False == Celcius
-float DHT::computeHeatIndex(float temperature, float percentHumidity, bool isFahrenheit) {
+float DHT::computeHeatIndex(isFahrenheit) {
+  float hi = self.computeHeatIndex(self.readTemperature(isFahrenheit), self.readHumidity(), isFahrenheit);
+  return isFahrenheit ? hi : convertFtoC(hi);
+}
+
+//boolean isFahrenheit: True == Fahrenheit; False == Celcius
+float DHT::computeHeatIndex(float temperature, floast percentHumidity, bool isFahrenheit) {
   // Using both Rothfusz and Steadman's equations
   // http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml
   float hi;
