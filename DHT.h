@@ -37,11 +37,28 @@ written by Adafruit Industries
 
 class DHT {
   public:
-   DHT(uint8_t pin, uint8_t type, uint8_t count=6);
+   // Note that count is now ignored as the DHT reading algorithm adjusts itself
+   // based on the speed of the processor.
+   DHT(uint8_t pin, uint8_t type, uint8_t count) {
+     DHT(pin, type);
+   };
+   DHT(uint8_t pin, uint8_t type);
    void begin(void);
+   float readFahrenheit(bool force=false) {
+       return readTemperature(true, force);
+   };
+   float readCelcius(bool force=false) {
+       return readTemperature(false, force);
+   };
    float readTemperature(bool S=false, bool force=false);
    float convertCtoF(float);
    float convertFtoC(float);
+   float computeHeatIndexFahrenheit(float temperature, float percentHumidity) {
+       return computeHeatIndex(temperature, percentHumidity, true);
+   };
+   float computeHeatIndexCelcius(float temperature, float percentHumidity) {
+       return computeHeatIndex(temperature, percentHumidity, false);
+   };
    float computeHeatIndex(float temperature, float percentHumidity, bool isFahrenheit=true);
    float readHumidity(bool force=false);
    boolean read(bool force=false);
@@ -59,6 +76,7 @@ class DHT {
 
   uint32_t expectPulse(bool level);
 
+  void _init(uint8_t pin, uint8_t type);
 };
 
 class InterruptLock {

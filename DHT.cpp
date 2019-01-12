@@ -8,7 +8,16 @@ written by Adafruit Industries
 
 #define MIN_INTERVAL 2000
 
-DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
+// Old constructor.
+//DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
+
+/*
+ * New constructor.
+ *
+ * Note that count is now ignored as the DHT reading algorithm adjusts itself
+ * based on the speed of the processor.
+ */
+DHT::DHT(uint8_t pin, uint8_t type) {
   _pin = pin;
   _type = type;
   #ifdef __AVR
@@ -17,9 +26,8 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   #endif
   _maxcycles = microsecondsToClockCycles(1000);  // 1 millisecond timeout for
                                                  // reading pulses from DHT sensor.
-  // Note that count is now ignored as the DHT reading algorithm adjusts itself
-  // basd on the speed of the processor.
 }
+
 
 void DHT::begin(void) {
   // set up the pins!
@@ -152,8 +160,12 @@ boolean DHT::read(bool force) {
     InterruptLock lock;
 
     // End the start signal by setting data line high for 40 microseconds.
-    digitalWrite(_pin, HIGH);
-    delayMicroseconds(40);
+    //digitalWrite(_pin, HIGH);
+    //delayMicroseconds(40);
+    // WEB: This is an error. DHT tries to pull the line low as soon as it came back to high.
+    // therefore the low-high transition after the start signal "low" needs to be realised by
+    // the pullup resistor only, uC pin must already be in INPUT mode.
+    // ref: https://github.com/adafruit/DHT-sensor-library/issues/48
 
     // Now start reading the data line to get the value from the DHT sensor.
     pinMode(_pin, INPUT_PULLUP);
