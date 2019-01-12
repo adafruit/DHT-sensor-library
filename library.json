@@ -1,0 +1,25 @@
+{
+    "name": "DHT sensor library",
+    "keywords": "sensors",
+    "description": "Arduino library for DHT11, DHT22, etc Temp & Humidity Sensors",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/adafruit/DHT-sensor-library.git"
+    },
+    "authors": [
+        {
+            "name": "Adafruit",
+            "email": "info@adafruit.com",
+            "url": "https://www.adafruit.com/",
+            "maintainer": true
+        }
+    ],
+    "version": "1.3.1",
+    "frameworks": "arduino",
+    "platforms": "*",
+    "dependencies": [
+        {
+            "name": "Adafruit Unified Sensor"
+        }
+    ]
+}
