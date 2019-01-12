@@ -7,6 +7,7 @@ written by Adafruit Industries
 #include "DHT.h"
 
 #define MIN_INTERVAL 2000
+#define TIMEOUT -1
 
 DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   _pin = pin;
@@ -157,12 +158,12 @@ boolean DHT::read(bool force) {
 
     // First expect a low signal for ~80 microseconds followed by a high signal
     // for ~80 microseconds again.
-    if (expectPulse(LOW) == 0) {
+    if (expectPulse(LOW) == TIMEOUT) {
       DEBUG_PRINTLN(F("Timeout waiting for start signal low pulse."));
       _lastresult = false;
       return _lastresult;
     }
-    if (expectPulse(HIGH) == 0) {
+    if (expectPulse(HIGH) == TIMEOUT) {
       DEBUG_PRINTLN(F("Timeout waiting for start signal high pulse."));
       _lastresult = false;
       return _lastresult;
@@ -187,7 +188,7 @@ boolean DHT::read(bool force) {
   for (int i=0; i<40; ++i) {
     uint32_t lowCycles  = cycles[2*i];
     uint32_t highCycles = cycles[2*i+1];
-    if ((lowCycles == 0) || (highCycles == 0)) {
+    if ((lowCycles == TIMEOUT) || (highCycles == TIMEOUT)) {
       DEBUG_PRINTLN(F("Timeout waiting for pulse."));
       _lastresult = false;
       return _lastresult;
@@ -238,7 +239,7 @@ uint32_t DHT::expectPulse(bool level) {
     uint8_t portState = level ? _bit : 0;
     while ((*portInputRegister(_port) & _bit) == portState) {
       if (count++ >= _maxcycles) {
-        return 0; // Exceeded timeout, fail.
+        return TIMEOUT; // Exceeded timeout, fail.
       }
     }
   // Otherwise fall back to using digitalRead (this seems to be necessary on ESP8266
@@ -246,7 +247,7 @@ uint32_t DHT::expectPulse(bool level) {
   #else
     while (digitalRead(_pin) == level) {
       if (count++ >= _maxcycles) {
-        return 0; // Exceeded timeout, fail.
+        return TIMEOUT; // Exceeded timeout, fail.
       }
     }
   #endif
