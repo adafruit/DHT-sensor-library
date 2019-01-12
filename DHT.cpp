@@ -45,9 +45,7 @@ float DHT::readTemperature(bool S, bool force) {
       break;
     case DHT22:
     case DHT21:
-      f = data[2] & 0x7F;
-      f *= 256;
-      f += data[3];
+      f = ((word)(data[2] & 0x7F)) << 8 | data[3];
       f *= 0.1;
       if (data[2] & 0x80) {
         f *= -1;
@@ -78,9 +76,7 @@ float DHT::readHumidity(bool force) {
       break;
     case DHT22:
     case DHT21:
-      f = data[0];
-      f *= 256;
-      f += data[1];
+      f = ((word)data[0]) << 8 | data[1];
       f *= 0.1;
       break;
     }
