@@ -92,13 +92,15 @@ float DHT::readHumidity(bool force) {
 }
 
 //boolean isFahrenheit: True == Fahrenheit; False == Celcius
-float DHT::computeHeatIndex(isFahrenheit) {
-  float hi = self.computeHeatIndex(self.readTemperature(isFahrenheit), self.readHumidity(), isFahrenheit);
+float DHT::computeHeatIndex(bool isFahrenheit) {
+  float hi = computeHeatIndex(readTemperature(isFahrenheit), readHumidity(),
+    isFahrenheit);
   return isFahrenheit ? hi : convertFtoC(hi);
 }
 
 //boolean isFahrenheit: True == Fahrenheit; False == Celcius
-float DHT::computeHeatIndex(float temperature, floast percentHumidity, bool isFahrenheit) {
+float DHT::computeHeatIndex(float temperature, float percentHumidity,
+  bool isFahrenheit) {
   // Using both Rothfusz and Steadman's equations
   // http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml
   float hi;
@@ -243,7 +245,11 @@ bool DHT::read(bool force) {
 // in the very latest IDE versions):
 //   https://github.com/arduino/Arduino/blob/master/hardware/arduino/avr/cores/arduino/wiring_pulse.c
 uint32_t DHT::expectPulse(bool level) {
-  uint16_t count = 0;
+#if (F_CPU > 16000000L)
+  uint32_t count = 0;
+#else
+  uint16_t count = 0; // To work fast enough on slower AVR boards
+#endif
   // On AVR platforms use direct GPIO port access as it's much faster and better
   // for catching pulses that are 10's of microseconds in length:
   #ifdef __AVR
