@@ -28,8 +28,8 @@ void DHT::begin(void) {
   // Using this value makes sure that millis() - lastreadtime will be
   // >= MIN_INTERVAL right away. Note that this assignment wraps around,
   // but so will the subtraction.
-  _lastreadtime = millis()-MIN_INTERVAL;
-  DEBUG_PRINT("Max clock cycles: "); DEBUG_PRINTLN(_maxcycles, DEC);
+  _lastreadtime = millis() - MIN_INTERVAL;
+  DEBUG_PRINT("DHT max clock cycles: "); DEBUG_PRINTLN(_maxcycles, DEC);
 }
 
 //boolean S == Scale.  True == Fahrenheit; False == Celcius
@@ -165,12 +165,12 @@ bool DHT::read(bool force) {
     // First expect a low signal for ~80 microseconds followed by a high signal
     // for ~80 microseconds again.
     if (expectPulse(LOW) == TIMEOUT) {
-      DEBUG_PRINTLN(F("Timeout waiting for start signal low pulse."));
+      DEBUG_PRINTLN(F("DHT timeout waiting for start signal low pulse."));
       _lastresult = false;
       return _lastresult;
     }
     if (expectPulse(HIGH) == TIMEOUT) {
-      DEBUG_PRINTLN(F("Timeout waiting for start signal high pulse."));
+      DEBUG_PRINTLN(F("DHT timeout waiting for start signal high pulse."));
       _lastresult = false;
       return _lastresult;
     }
@@ -195,7 +195,7 @@ bool DHT::read(bool force) {
     uint32_t lowCycles  = cycles[2*i];
     uint32_t highCycles = cycles[2*i+1];
     if ((lowCycles == TIMEOUT) || (highCycles == TIMEOUT)) {
-      DEBUG_PRINTLN(F("Timeout waiting for pulse."));
+      DEBUG_PRINTLN(F("DHT timeout waiting for pulse."));
       _lastresult = false;
       return _lastresult;
     }
@@ -210,7 +210,7 @@ bool DHT::read(bool force) {
     // stored data.
   }
 
-  DEBUG_PRINTLN(F("Received:"));
+  DEBUG_PRINTLN(F("Received from DHT:"));
   DEBUG_PRINT(data[0], HEX); DEBUG_PRINT(F(", "));
   DEBUG_PRINT(data[1], HEX); DEBUG_PRINT(F(", "));
   DEBUG_PRINT(data[2], HEX); DEBUG_PRINT(F(", "));
@@ -224,7 +224,7 @@ bool DHT::read(bool force) {
     return _lastresult;
   }
   else {
-    DEBUG_PRINTLN(F("Checksum failure!"));
+    DEBUG_PRINTLN(F("DHT checksum failure!"));
     _lastresult = false;
     return _lastresult;
   }
