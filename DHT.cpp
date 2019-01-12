@@ -148,26 +148,34 @@ bool DHT::read(bool force) {
 
   // Go into high impedence state to let pull-up raise data line level and
   // start the reading process.
-  digitalWrite(_pin, HIGH);
+  pinMode(_pin, INPUT_PULLUP);
   delay(1);
 
-  // First set data line low for 1 millisecond.
+  // First set data line low for a period according to sensor type
   pinMode(_pin, OUTPUT);
   digitalWrite(_pin, LOW);
-  delay(1);
+  switch(_type) {
+    case DHT22: 
+    case DHT21: 
+      delayMicroseconds(1100); // data sheet says "at least 1ms"
+      break;
+    case DHT11:		 
+    default:
+      delay(20); //data sheet says at least 18ms, 20ms just to be safe
+      break;
+  }
 
   uint32_t cycles[80];
   {
-    // Turn off interrupts temporarily because the next sections are timing critical
-    // and we don't want any interruptions.
-    InterruptLock lock;
-
     // End the start signal by setting data line high for 40 microseconds.
-    digitalWrite(_pin, HIGH);
     pinMode(_pin, INPUT_PULLUP);
 
     // Now start reading the data line to get the value from the DHT sensor.
     delayMicroseconds(60);  // Delay a bit to let sensor pull data line low.
+
+    // Turn off interrupts temporarily because the next sections
+    // are timing critical and we don't want any interruptions.
+    InterruptLock lock;
 
     // First expect a low signal for ~80 microseconds followed by a high signal
     // for ~80 microseconds again.
