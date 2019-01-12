@@ -27,7 +27,7 @@ void DHT::begin(void) {
   // Using this value makes sure that millis() - lastreadtime will be
   // >= MIN_INTERVAL right away. Note that this assignment wraps around,
   // but so will the subtraction.
-  _lastreadtime = -MIN_INTERVAL;
+  _lastreadtime = millis()-MIN_INTERVAL;
   DEBUG_PRINT("Max clock cycles: "); DEBUG_PRINTLN(_maxcycles, DEC);
 }
 
@@ -124,7 +124,7 @@ boolean DHT::read(bool force) {
   // Check if sensor was read less than two seconds ago and return early
   // to use last reading.
   uint32_t currenttime = millis();
-  if (!force && ((currenttime - _lastreadtime) < 2000)) {
+  if (!force && ((currenttime - _lastreadtime) < MIN_INTERVAL)) {
     return _lastresult; // return last correct measurement
   }
   _lastreadtime = currenttime;
