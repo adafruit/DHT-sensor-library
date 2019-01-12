@@ -37,6 +37,9 @@ void DHT_Unified::setName(sensor_t* sensor) {
     case DHT11:
       strncpy(sensor->name, "DHT11", sizeof(sensor->name) - 1);
       break;
+    case DHT12:
+      strncpy(sensor->name, "DHT12", sizeof(sensor->name) - 1);
+      break;
     case DHT21:
       strncpy(sensor->name, "DHT21", sizeof(sensor->name) - 1);
       break;
@@ -56,6 +59,9 @@ void DHT_Unified::setMinDelay(sensor_t* sensor) {
   switch(_type) {
     case DHT11:
       sensor->min_delay = 1000000L;  // 1 second (in microseconds)
+      break;
+    case DHT12:
+      sensor->min_delay = 2000000L;  // 2 second (in microseconds)
       break;
     case DHT21:
       sensor->min_delay = 2000000L;  // 2 seconds (in microseconds)
@@ -104,6 +110,11 @@ void DHT_Unified::Temperature::getSensor(sensor_t* sensor) {
       sensor->max_value   = 50.0F;
       sensor->min_value   = 0.0F;
       sensor->resolution  = 2.0F;
+      break;
+    case DHT12:
+      sensor->max_value   = 60.0F;
+      sensor->min_value   = -20.0F;
+      sensor->resolution  = 0.5F;
       break;
     case DHT21:
       sensor->max_value   = 80.0F;
@@ -156,6 +167,11 @@ void DHT_Unified::Humidity::getSensor(sensor_t* sensor) {
   switch (_parent->_type) {
     case DHT11:
       sensor->max_value   = 80.0F;
+      sensor->min_value   = 20.0F;
+      sensor->resolution  = 5.0F;
+      break;
+    case DHT12:
+      sensor->max_value   = 95.0F;
       sensor->min_value   = 20.0F;
       sensor->resolution  = 5.0F;
       break;
