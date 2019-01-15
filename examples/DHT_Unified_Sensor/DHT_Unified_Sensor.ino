@@ -3,9 +3,9 @@
 // Written by Tony DiCola for Adafruit Industries
 // Released under an MIT license.
 
-// Depends on the following Arduino libraries:
-// - Adafruit Unified Sensor Library: https://github.com/adafruit/Adafruit_Sensor
+// REQUIRES the following Arduino libraries:
 // - DHT Sensor Library: https://github.com/adafruit/DHT-sensor-library
+// - Adafruit Unified Sensor Library: https://github.com/adafruit/Adafruit_Sensor
 
 #include <Adafruit_Sensor.h>
 #include <DHT.h>

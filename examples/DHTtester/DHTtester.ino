@@ -1,6 +1,10 @@
 // Example testing sketch for various DHT humidity/temperature sensors
 // Written by ladyada, public domain
 
+// REQUIRES the following Arduino libraries:
+// - DHT Sensor Library: https://github.com/adafruit/DHT-sensor-library
+// - Adafruit Unified Sensor Library: https://github.com/adafruit/Adafruit_Senso
+
 #include "DHT.h"
 
 #define DHTPIN 2     // what digital pin we're connected to
