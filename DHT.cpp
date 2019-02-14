@@ -39,6 +39,15 @@ float DHT::readTemperature(bool S, bool force) {
   if (read(force)) {
     switch (_type) {
     case DHT11:
+      f = data[2];
+      if (data[3] & 0x80) {
+        f = -1 - f ;
+      }
+      f += (data[3] & 0x0f) * 0.1;
+      if(S) {
+        f = convertCtoF(f);
+      }
+      break;
     case DHT12:
       f = data[2];
       f += (data[3] & 0x0f) * 0.1;
@@ -155,11 +164,11 @@ bool DHT::read(bool force) {
   pinMode(_pin, OUTPUT);
   digitalWrite(_pin, LOW);
   switch(_type) {
-    case DHT22: 
-    case DHT21: 
+    case DHT22:
+    case DHT21:
       delayMicroseconds(1100); // data sheet says "at least 1ms"
       break;
-    case DHT11:		 
+    case DHT11:
     default:
       delay(20); //data sheet says at least 18ms, 20ms just to be safe
       break;
