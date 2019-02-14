@@ -22,7 +22,9 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   // based on the speed of the processor.
 }
 
-void DHT::begin(void) {
+// Optionally pass pull-up time (in microseconds) before DHT reading starts.
+// Default is 55 (see function declaration in DHT.h).
+void DHT::begin(uint8_t usec) {
   // set up the pins!
   pinMode(_pin, INPUT_PULLUP);
   // Using this value makes sure that millis() - lastreadtime will be
@@ -30,6 +32,7 @@ void DHT::begin(void) {
   // but so will the subtraction.
   _lastreadtime = millis() - MIN_INTERVAL;
   DEBUG_PRINT("DHT max clock cycles: "); DEBUG_PRINTLN(_maxcycles, DEC);
+  pullTime = usec;
 }
 
 //boolean S == Scale.  True == Fahrenheit; False == Celcius
@@ -179,8 +182,10 @@ bool DHT::read(bool force) {
     // End the start signal by setting data line high for 40 microseconds.
     pinMode(_pin, INPUT_PULLUP);
 
+    // Delay a moment to let sensor pull data line low.
+    delayMicroseconds(pullTime);
+
     // Now start reading the data line to get the value from the DHT sensor.
-    delayMicroseconds(40);  // Delay a bit to let sensor pull data line low.
 
     // Turn off interrupts temporarily because the next sections
     // are timing critical and we don't want any interruptions.
