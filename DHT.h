@@ -67,9 +67,6 @@ class DHT {
 class InterruptLock {
   public:
    InterruptLock() {
-#if defined(ESP8266)
-    yield();
-#endif
 #if !defined(ARDUINO_ARCH_NRF52)  
     noInterrupts();
 #endif
@@ -77,9 +74,6 @@ class InterruptLock {
    ~InterruptLock() {
 #if !defined(ARDUINO_ARCH_NRF52)  
     interrupts();
-#endif
-#if defined(ESP8266)
-    yield();
 #endif
    }
 };

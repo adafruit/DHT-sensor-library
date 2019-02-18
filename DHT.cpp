@@ -155,6 +155,10 @@ bool DHT::read(bool force) {
   // Reset 40 bits of received data to zero.
   data[0] = data[1] = data[2] = data[3] = data[4] = 0;
 
+#if defined(ESP8266)
+    yield(); // Handle WiFi / reset software watchdog
+#endif
+
   // Send start signal.  See DHT datasheet for full signal diagram:
   //   http://www.adafruit.com/datasheets/Digital%20humidity%20and%20temperature%20sensor%20AM2302.pdf
 
