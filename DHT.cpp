@@ -107,7 +107,7 @@ float DHT::readHumidity(bool force) {
 float DHT::computeHeatIndex(bool isFahrenheit) {
   float hi = computeHeatIndex(readTemperature(isFahrenheit), readHumidity(),
     isFahrenheit);
-  return isFahrenheit ? hi : convertFtoC(hi);
+  return hi;
 }
 
 //boolean isFahrenheit: True == Fahrenheit; False == Celcius
