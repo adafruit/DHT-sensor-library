@@ -1,26 +1,32 @@
-// DHT Temperature & Humidity Unified Sensor Library
-// Copyright (c) 2014 Adafruit Industries
-// Author: Tony DiCola
-
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+/*!
+ *  @file DHT_U.cpp
+ *
+ *  Temperature & Humidity Unified Sensor Library
+ *
+ *  This is a library for DHT series of low cost temperature/humidity sensors.
+ *
+ *  You must have Adafruit Unified Sensor Library library installed to use this
+ * class.
+ *
+ *  Adafruit invests time and resources providing this open source code,
+ *  please support Adafruit andopen-source hardware by purchasing products
+ *  from Adafruit!
+ */
 #include "DHT_U.h"
 
+/*!
+ *  @brief  Instantiates a new DHT_Unified class
+ *  @param  pin
+ *          pin number that sensor is connected
+ *  @param  type
+ *          type of sensor
+ *  @param  count
+ *          number of sensors
+ *  @param  tempSensorId
+ *          temperature sensor id
+ *  @param  humiditySensorId
+ *          humidity sensor id
+ */
 DHT_Unified::DHT_Unified(uint8_t pin, uint8_t type, uint8_t count, int32_t tempSensorId, int32_t humiditySensorId):
   _dht(pin, type, count),
   _type(type),
@@ -28,10 +34,18 @@ DHT_Unified::DHT_Unified(uint8_t pin, uint8_t type, uint8_t count, int32_t tempS
   _humidity(this, humiditySensorId)
 {}
 
+/*!
+ *  @brief  Setup sensor (calls begin on It)
+ */
 void DHT_Unified::begin() {
   _dht.begin();
 }
 
+/*!
+ *  @brief  Sets sensor name
+ *  @param  sensor
+ *          Sensor that will be set
+ */
 void DHT_Unified::setName(sensor_t* sensor) {
   switch(_type) {
     case DHT11:
@@ -55,6 +69,11 @@ void DHT_Unified::setName(sensor_t* sensor) {
   sensor->name[sizeof(sensor->name)- 1] = 0;
 }
 
+/*!
+ *  @brief  Sets Minimum Delay Value
+ *  @param  sensor
+ *          Sensor that will be set
+ */
 void DHT_Unified::setMinDelay(sensor_t* sensor) {
   switch(_type) {
     case DHT11:
@@ -76,11 +95,23 @@ void DHT_Unified::setMinDelay(sensor_t* sensor) {
   }
 }
 
+/*!
+ *  @brief  Instantiates a new DHT_Unified Temperature Class
+ *  @param  parent
+ *          Parent Sensor
+ *  @param  id
+ *          Sensor id
+ */
 DHT_Unified::Temperature::Temperature(DHT_Unified* parent, int32_t id):
   _parent(parent),
   _id(id)
 {}
 
+/*!
+ *  @brief  Reads the sensor and returns the data as a sensors_event_t
+ *  @param  event
+ *  @return always returns true
+ */
 bool DHT_Unified::Temperature::getEvent(sensors_event_t* event) {
   // Clear event definition.
   memset(event, 0, sizeof(sensors_event_t));
@@ -94,6 +125,10 @@ bool DHT_Unified::Temperature::getEvent(sensors_event_t* event) {
   return true;
 }
 
+/*!
+ *  @brief  Provides the sensor_t data for this sensor
+ *  @param  sensor
+ */
 void DHT_Unified::Temperature::getSensor(sensor_t* sensor) {
   // Clear sensor definition.
   memset(sensor, 0, sizeof(sensor_t));
@@ -135,11 +170,23 @@ void DHT_Unified::Temperature::getSensor(sensor_t* sensor) {
   }
 }
 
+/*!
+ *  @brief  Instantiates a new DHT_Unified Humidity Class
+ *  @param  parent
+ *          Parent Sensor
+ *  @param  id
+ *          Sensor id
+ */
 DHT_Unified::Humidity::Humidity(DHT_Unified* parent, int32_t id):
   _parent(parent),
   _id(id)
 {}
 
+/*!
+ *  @brief  Reads the sensor and returns the data as a sensors_event_t
+ *  @param  event
+ *  @return always returns true
+ */
 bool DHT_Unified::Humidity::getEvent(sensors_event_t* event) {
   // Clear event definition.
   memset(event, 0, sizeof(sensors_event_t));
@@ -153,6 +200,10 @@ bool DHT_Unified::Humidity::getEvent(sensors_event_t* event) {
   return true;
 }
 
+/*!
+ *  @brief  Provides the sensor_t data for this sensor
+ *  @param  sensor
+ */
 void DHT_Unified::Humidity::getSensor(sensor_t* sensor) {
   // Clear sensor definition.
   memset(sensor, 0, sizeof(sensor_t));
