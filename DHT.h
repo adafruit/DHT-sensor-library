@@ -24,6 +24,7 @@
   #include <interrupts.h>
  #endif
 
+
 /* Uncomment to enable printing out nice debug messages. */
 //#define DHT_DEBUG
 
@@ -93,9 +94,7 @@ private:
   uint32_t expectPulse(bool level);
 };
 
-#if defined(ESP8266)
-using esp8266::InterruptLock;
-#else
+#if !defined(ESP8266)
 /*!
  *  @brief  Class that defines Interrupt Lock Avaiability
  */
