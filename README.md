@@ -135,7 +135,7 @@ Based on previous work by:
 
 - T. DiCola
 - P. Y. Dragon
-- L. L. Fried
+- L. Fried
 - J. Hoffmann
 - M. Kooijman
 - J. M. Dana
@@ -156,10 +156,6 @@ Based on previous work by:
 - I. Scheller
 - C. Miller
 - 7eggert
-
-## Current stable version
-
-**version:**  v1.3.7
 
 ## License
 
