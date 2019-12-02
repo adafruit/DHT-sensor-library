@@ -41,13 +41,15 @@
 #define DHT21 21 /**< DHT TYPE 21 */
 #define AM2301 21 /**< AM2301 */
 
-/*! 
+#define DEFAULT_PULLTIME 55
+
+/*!
  *  @brief  Class that stores state and functions for DHT
  */
 class DHT {
   public:
    DHT(uint8_t pin, uint8_t type, uint8_t count=6);
-   void begin(uint8_t usec=55);
+   void begin(uint8_t usec=DEFAULT_PULLTIME);
    float readTemperature(bool S=false, bool force=false);
    float convertCtoF(float);
    float convertFtoC(float);
@@ -66,7 +68,7 @@ class DHT {
   #endif
   uint32_t _lastreadtime, _maxcycles;
   bool _lastresult;
-  uint8_t pullTime; // Time (in usec) to pull up data line before reading
+  uint8_t _pullTime; // Time (in usec) to pull up data line before reading
 
   uint32_t expectPulse(bool level);
 
