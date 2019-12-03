@@ -66,7 +66,7 @@ void DHT::begin(uint8_t usec) {
   _lastreadtime = millis() - MIN_INTERVAL;
   DEBUG_PRINT("DHT max clock cycles: ");
   DEBUG_PRINTLN(_maxcycles, DEC);
-  pullTime = usec;
+  _pullTime = usec;
 }
 
 /*!
@@ -234,6 +234,12 @@ bool DHT::read(bool force) {
   }
   _lastreadtime = currenttime;
 
+  // Make sure begin() was called.
+  if (_pullTime < 1) {
+    DEBUG_PRINTLN(F("read() was incorrectly called before begin()"));
+    _pullTime = DEFAULT_PULLTIME;
+  }
+
   // Reset 40 bits of received data to zero.
   data[0] = data[1] = data[2] = data[3] = data[4] = 0;
 
@@ -269,7 +275,7 @@ bool DHT::read(bool force) {
     pinMode(_pin, INPUT_PULLUP);
 
     // Delay a moment to let sensor pull data line low.
-    delayMicroseconds(pullTime);
+    delayMicroseconds(_pullTime);
 
     // Now start reading the data line to get the value from the DHT sensor.
 
