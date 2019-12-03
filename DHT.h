@@ -41,6 +41,10 @@
 #define DHT21 21 /**< DHT TYPE 21 */
 #define AM2301 21 /**< AM2301 */
 
+/*!
+ *  Default time in usec to pull up the data line before reading from
+ *  the DHT. This can be overriden with the value passed into begin().
+ */
 #define DEFAULT_PULLTIME 55
 
 /*!
