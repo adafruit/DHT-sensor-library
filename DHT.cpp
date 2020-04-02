@@ -175,9 +175,12 @@ float DHT::computeHeatIndex(bool isFahrenheit) {
 }
 
 /*!
- *  @brief  Compute Heat Index
- *  				Using both Rothfusz and Steadman's equations
+ *  @brief  Compute Heat Index (based on Robert G. Steadman tables)
+ *  				Using Rothfusz equations with refinements by the NWS
  *					(http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml)
+ *                  and NWS algorithm that respects lower values of temperature
+ *                  and humidity
+ *                  (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3801457/)
  *  @param  temperature
  *          temperature in selected scale
  *  @param  percentHumidity
@@ -192,6 +195,15 @@ float DHT::computeHeatIndex(float temperature, float percentHumidity,
 
   if (!isFahrenheit)
     temperature = convertCtoF(temperature);
+
+  if(temperature <= 40) {
+    return isFahrenheit ? temperature : convertFtoC(temperature);
+  }
+
+  float varA = -10.3 + 1.1 * temperature + 0.047 * percentHumidity;
+  if (varA < 79) {
+    return isFahrenheit ? varA : convertFtoC(varA);
+  }
 
   hi = 0.5 * (temperature + 61.0 + ((temperature - 68.0) * 1.2) +
               (percentHumidity * 0.094));
