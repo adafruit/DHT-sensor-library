@@ -76,13 +76,13 @@ public:
     int32_t _id;
   };
 
-	/*!
+  /*!
    *  @brief  Returns temperature stored in _temp
    *  @return Temperature value
    */
   Temperature temperature() { return _temp; }
 
-	/*!
+  /*!
    *  @brief  Returns humidity stored in _humidity
    *  @return Humidity value
    */
