@@ -117,6 +117,9 @@ float DHT::readTemperature(bool S, bool force) {
       break;
     }
   }
+  // If VCC pin assigned, runs VCC pin restart funtion.
+  if (_VCC_Pin) { resetVCC_Pin(f); }
+
   return f;
 }
 
@@ -157,6 +160,9 @@ float DHT::readHumidity(bool force) {
       break;
     }
   }
+  // If VCC pin assigned, runs VCC pin restart funtion.
+  if (_VCC_Pin) { resetVCC_Pin(f); }
+
   return f;
 }
 
@@ -382,4 +388,60 @@ uint32_t DHT::expectPulse(bool level) {
 #endif
 
   return count;
+}
+
+/*!
+ *  @brief  Set sensor to restart if it cannot be read by temporarily disabling power to sensor's 
+ *          VCC pin, which is initiated with this function.
+ *  @param  VCC_Pin
+ *          Specify sensor's VCC power pin.
+ *  @param  offInterval
+ *          The amount of time in milliseconds to turn off power to sensor during reset.
+ *  @param  maxTries
+ *          Will attempt reset this many times. 0 for infinite
+ */
+void DHT::setPowerReset(uint8_t VCC_Pin, uint16_t offInterval, uint8_t maxTries) {
+  _VCC_Pin = VCC_Pin;
+  _offInterval = offInterval;
+  _maxTries = maxTries;
+
+  pinMode(_VCC_Pin, OUTPUT);
+  digitalWrite(_VCC_Pin, HIGH);
+}
+
+/*!
+ *  @brief  If f is NAN, toggles the VCC power pin on and off as specified by
+ *          setPowerReset() function.
+ *  @param  f
+ *          Sensor Reading from read functions, runs full function if NAN
+ */
+void DHT::resetVCC_Pin(float f) {
+  if (!isnan(f)) {
+    _tryCount = 0; 
+    digitalWrite(_VCC_Pin, HIGH);
+    return;
+  }  
+  uint32_t currenttime = millis();
+
+  //Evaluate current number of tries and assign outcome to bool tries. 
+  //Default is true if _maxTries is not set.
+  bool triesAvailable = true;
+  if (_maxTries) {
+    triesAvailable = (_tryCount < (_maxTries));
+  }
+
+  if ((currenttime - _timeAtLastRestart >= _offInterval) & (triesAvailable)) {
+      //Toggles VCC pin between LOW and HIGH every _offInterval, 
+      //depending on the current state of _VCC_stateSwitch
+    if (!_VCC_stateSwitch) {
+      digitalWrite(_VCC_Pin, LOW);
+      _VCC_stateSwitch = true;
+    } else {
+      digitalWrite(_VCC_Pin, HIGH);
+      _VCC_stateSwitch = false;
+      _tryCount += 1;
+    }
+    
+    _timeAtLastRestart = currenttime;
+  }
 }
