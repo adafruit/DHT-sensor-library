@@ -56,6 +56,8 @@ class DHT {
    float readHumidity(bool force=false);
    bool read(bool force=false);
 
+   void setPowerReset(uint8_t VCC_pin, uint16_t offInterval = 1000, uint8_t maxTries = 0);
+
  private:
   uint8_t data[5];
   uint8_t _pin, _type;
@@ -70,6 +72,13 @@ class DHT {
 
   uint32_t expectPulse(bool level);
 
+  /* Variables for powerReset function */
+  uint8_t _VCC_Pin, _tryCount, _maxTries;
+  uint16_t _offInterval;
+  uint32_t _timeAtLastRestart = 0;
+  bool _VCC_stateSwitch = false;
+
+  void DHT::resetVCC_Pin(float f);
 };
 
 /*! 
