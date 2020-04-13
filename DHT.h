@@ -75,7 +75,7 @@ class DHT {
   /* Variables for powerReset function */
   uint8_t _VCC_Pin, _tryCount, _maxTries;
   uint16_t _offInterval;
-  uint32_t _timeAtLastRestart = 0;
+  uint32_t _timeAtLastReset = 0;
   bool _VCC_stateSwitch = false;
 
   void DHT::resetVCC_Pin(float f);
