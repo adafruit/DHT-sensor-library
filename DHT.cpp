@@ -430,7 +430,7 @@ void DHT::resetVCC_Pin(float f) {
     triesAvailable = (_tryCount < (_maxTries));
   }
 
-  if ((currenttime - _timeAtLastRestart >= _offInterval) & (triesAvailable)) {
+  if ((currenttime - _timeAtLastReset >= _offInterval) & (triesAvailable)) {
       //Toggles VCC pin between LOW and HIGH every _offInterval, 
       //depending on the current state of _VCC_stateSwitch
     if (!_VCC_stateSwitch) {
@@ -442,6 +442,6 @@ void DHT::resetVCC_Pin(float f) {
       _tryCount += 1;
     }
     
-    _timeAtLastRestart = currenttime;
+    _timeAtLastReset = currenttime;
   }
 }
