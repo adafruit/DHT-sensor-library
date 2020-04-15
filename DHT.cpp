@@ -81,6 +81,7 @@ void DHT::begin(uint8_t usec) {
  */
 float DHT::readTemperature(bool S, bool force) {
   float f = NAN;
+  float a,b;
 
   if (read(force)) {
     switch (_type) {
@@ -105,6 +106,13 @@ float DHT::readTemperature(bool S, bool force) {
       }
       break;
     case DHT22:
+      a = data[2]<<8;
+      b = data[3];
+      f = (a + b)/10;
+      if (S) {
+        f = convertCtoF(f);
+      }
+      break;
     case DHT21:
       f = ((word)(data[2] & 0x7F)) << 8 | data[3];
       f *= 0.1;
@@ -144,6 +152,7 @@ float DHT::convertFtoC(float f) { return (f - 32) * 0.55555; }
  */
 float DHT::readHumidity(bool force) {
   float f = NAN;
+  float a,b;
   if (read(force)) {
     switch (_type) {
     case DHT11:
@@ -151,6 +160,10 @@ float DHT::readHumidity(bool force) {
       f = data[0] + data[1] * 0.1;
       break;
     case DHT22:
+      a = data[0]<<8;
+      b = data[1];
+      f = (a + b)/10;
+      break;
     case DHT21:
       f = ((word)data[0]) << 8 | data[1];
       f *= 0.1;
@@ -254,6 +267,8 @@ bool DHT::read(bool force) {
   digitalWrite(_pin, LOW);
   switch (_type) {
   case DHT22:
+    delay(20); // data sheet says at least 18ms, 20ms just to be safe
+    break;
   case DHT21:
     delayMicroseconds(1100); // data sheet says "at least 1ms"
     break;
