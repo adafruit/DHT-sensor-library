@@ -164,8 +164,8 @@ float DHT::readHumidity(bool force) {
  *  @brief  Compute Heat Index
  *          Simplified version that reads temp and humidity from sensor
  *  @param  isFahrenheit
- * 					true if fahrenheit, false if celcius (default
- *true)
+ * 					true if fahrenheit, false if celcius
+ *(default true)
  *	@return float heat index
  */
 float DHT::computeHeatIndex(bool isFahrenheit) {
