@@ -37,7 +37,7 @@
  *  @param  count
  *          number of sensors
  */
-DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
+DHT::DHT(uint8_t pin, uint8_t type, uint8_t /*count*/) {
   _pin = pin;
   _type = type;
 #ifdef __AVR
@@ -279,12 +279,12 @@ bool DHT::read(bool force) {
 
     // First expect a low signal for ~80 microseconds followed by a high signal
     // for ~80 microseconds again.
-    if (expectPulse(LOW) == TIMEOUT) {
+    if (expectPulse(LOW) == (uint32_t)TIMEOUT) {
       DEBUG_PRINTLN(F("DHT timeout waiting for start signal low pulse."));
       _lastresult = false;
       return _lastresult;
     }
-    if (expectPulse(HIGH) == TIMEOUT) {
+    if (expectPulse(HIGH) == (uint32_t)TIMEOUT) {
       DEBUG_PRINTLN(F("DHT timeout waiting for start signal high pulse."));
       _lastresult = false;
       return _lastresult;
@@ -309,7 +309,7 @@ bool DHT::read(bool force) {
   for (int i = 0; i < 40; ++i) {
     uint32_t lowCycles = cycles[2 * i];
     uint32_t highCycles = cycles[2 * i + 1];
-    if ((lowCycles == TIMEOUT) || (highCycles == TIMEOUT)) {
+    if ((lowCycles == (uint32_t)TIMEOUT) || (highCycles == (uint32_t)TIMEOUT)) {
       DEBUG_PRINTLN(F("DHT timeout waiting for pulse."));
       _lastresult = false;
       return _lastresult;
