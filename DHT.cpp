@@ -392,7 +392,7 @@ uint32_t DHT::expectPulse(bool level) {
 
 /*!
  *  @brief  Set sensor to restart if it cannot be read by temporarily disabling power to sensor's 
- *          VCC pin, which is initiated with this function.
+ *          VCC pin, which is assigned with this function.
  *  @param  VCC_Pin
  *          Specify sensor's VCC power pin.
  *  @param  offInterval
@@ -405,6 +405,7 @@ void DHT::setPowerReset(uint8_t VCC_Pin, uint16_t offInterval, uint8_t maxTries)
   _offInterval = offInterval;
   _maxTries = maxTries;
 
+  //Initiate VCC Pin
   pinMode(_VCC_Pin, OUTPUT);
   digitalWrite(_VCC_Pin, HIGH);
 }
@@ -413,10 +414,11 @@ void DHT::setPowerReset(uint8_t VCC_Pin, uint16_t offInterval, uint8_t maxTries)
  *  @brief  If f is NAN, toggles the VCC power pin on and off as specified by
  *          setPowerReset() function.
  *  @param  f
- *          Sensor Reading from read functions, runs full function if NAN
+ *          Sensor Reading from read functions, runs full function if f == NAN
  */
 void DHT::resetVCC_Pin(float f) {
-  if (!isnan(f)) {
+  if (!isnan(f)) { 
+  	resets = resets + _tryCount;
     _tryCount = 0; 
     digitalWrite(_VCC_Pin, HIGH);
     return;
