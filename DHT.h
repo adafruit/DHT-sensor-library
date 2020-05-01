@@ -56,7 +56,9 @@ class DHT {
    float readHumidity(bool force=false);
    bool read(bool force=false);
 
+  /* VCC Power Hard Reset function */
    void setPowerReset(uint8_t VCC_pin, uint16_t offInterval = 1000, uint8_t maxTries = 0);
+   uint8_t resets; //Keeps track of reset attempts
 
  private:
   uint8_t data[5];
