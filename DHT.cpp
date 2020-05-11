@@ -117,7 +117,7 @@ float DHT::readTemperature(bool S, bool force) {
       break;
     }
   }
-  // If VCC pin assigned, runs VCC pin restart funtion.
+  // If VCC pin assigned, runs VCC pin restart function.
   if (_VCC_Pin) { resetVCC_Pin(f); }
 
   return f;
@@ -160,7 +160,7 @@ float DHT::readHumidity(bool force) {
       break;
     }
   }
-  // If VCC pin assigned, runs VCC pin restart funtion.
+  // If VCC pin assigned, runs VCC pin restart function.
   if (_VCC_Pin) { resetVCC_Pin(f); }
 
   return f;
@@ -396,7 +396,7 @@ uint32_t DHT::expectPulse(bool level) {
  *  @param  VCC_Pin
  *          Specify sensor's VCC power pin.
  *  @param  offInterval
- *          The amount of time in milliseconds to turn off power to sensor during reset.
+ *          The amount of time in milliseconds to cycle on/off the power to sensor during reset.
  *  @param  maxTries
  *          Will attempt reset this many times. 0 for infinite
  */
@@ -414,7 +414,7 @@ void DHT::setPowerReset(uint8_t VCC_Pin, uint16_t offInterval, uint8_t maxTries)
  *  @brief  If f is NAN, toggles the VCC power pin on and off as specified by
  *          setPowerReset() function.
  *  @param  f
- *          Sensor Reading from read functions, runs full function if f == NAN
+ *          Sensor reading from read functions, runs full function if NAN
  */
 void DHT::resetVCC_Pin(float f) {
   if (!isnan(f)) { 
