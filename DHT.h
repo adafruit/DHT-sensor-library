@@ -80,7 +80,7 @@ class DHT {
   uint32_t _timeAtLastReset = 0;
   bool _VCC_stateSwitch = false;
 
-  void DHT::resetVCC_Pin(float f);
+  void resetVCC_Pin(float f);
 };
 
 /*! 
