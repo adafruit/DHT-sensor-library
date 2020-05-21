@@ -40,6 +40,7 @@
  *          number of sensors
  */
 DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
+  (void)count; // Workaround to avoid compiler warning.
   _pin = pin;
   _type = type;
 #ifdef __AVR
