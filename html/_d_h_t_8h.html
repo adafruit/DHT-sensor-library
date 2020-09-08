@@ -96,6 +96,8 @@ Macros</h2></td></tr>
 <tr class="separator:af718013a29c2115b00d7c77d2f28084b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3de32b1bf162072c5e2d695bea5bb296"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_h_t_8h.html#a3de32b1bf162072c5e2d695bea5bb296">AM2301</a>&#160;&#160;&#160;21</td></tr>
 <tr class="separator:a3de32b1bf162072c5e2d695bea5bb296"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4a5bbc71d71ab25856c1366b6ca15bb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_h_t_8h.html#aa4a5bbc71d71ab25856c1366b6ca15bb">microsecondsToClockCycles</a>(a)&#160;&#160;&#160;((a) * (SystemCoreClock / 1000000L))</td></tr>
+<tr class="separator:aa4a5bbc71d71ab25856c1366b6ca15bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This is a library for <a class="el" href="class_d_h_t.html" title="Class that stores state and functions for DHT. ">DHT</a> series of low cost temperature/humidity sensors.</p>
@@ -229,6 +231,25 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>AM2301 </p>
+
+</div>
+</div>
+<a id="aa4a5bbc71d71ab25856c1366b6ca15bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4a5bbc71d71ab25856c1366b6ca15bb">&#9670;&nbsp;</a></span>microsecondsToClockCycles</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define microsecondsToClockCycles</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">a</td><td>)</td>
+          <td>&#160;&#160;&#160;((a) * (SystemCoreClock / 1000000L))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>As of 7 Sep 2020 the Arduino Nano 33 BLE boards do not have microsecondsToClockCycles defined. </p>
 
 </div>
 </div>
