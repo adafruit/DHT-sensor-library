@@ -48,9 +48,11 @@
 #define AM2301 21 /**< AM2301 */
 
 #if (TARGET_NAME == ARDUINO_NANO33BLE)
-// As of 7 Sep 2020 the Arduino Nano 33 BLE boards do not have
-// microsecondsToClockCycles defined.
 #ifndef microsecondsToClockCycles
+/*!
+ * As of 7 Sep 2020 the Arduino Nano 33 BLE boards do not have
+ * microsecondsToClockCycles defined.
+ */
 #define microsecondsToClockCycles(a) ((a) * (SystemCoreClock / 1000000L))
 #endif
 #endif
