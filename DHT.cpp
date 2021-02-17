@@ -110,7 +110,10 @@ float DHT::readTemperature(bool S, bool force) {
     case DHT22:
     case DHT21:
       int16_t t = ((int16_t)data[2] << 8) | data[3];
-      f = t * 0.1;
+      if(data[2] == 0x80)
+        f = 0;
+      else
+        f = t * 0.1;
       if (S) {
         f = convertCtoF(f);
       }
