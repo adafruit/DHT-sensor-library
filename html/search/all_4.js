@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['getevent',['getEvent',['../class_d_h_t___unified_1_1_temperature.html#adeb63f8a2c39634d005f822db81d4d76',1,'DHT_Unified::Temperature::getEvent()'],['../class_d_h_t___unified_1_1_humidity.html#a17de7d73587c312e0a2b7ea1dcf35ba8',1,'DHT_Unified::Humidity::getEvent()']]],
-  ['getsensor',['getSensor',['../class_d_h_t___unified_1_1_temperature.html#a2d952e5ed342ce324fca0d2f8854d2d7',1,'DHT_Unified::Temperature::getSensor()'],['../class_d_h_t___unified_1_1_humidity.html#a424a424cfeabd672c93fffd4c9ad0ff0',1,'DHT_Unified::Humidity::getSensor()']]]
+  ['humidity',['Humidity',['../class_d_h_t___unified_1_1_humidity.html',1,'DHT_Unified::Humidity'],['../class_d_h_t___unified.html#aacc7234ba09647604c6d9ff9b89df69c',1,'DHT_Unified::humidity()'],['../class_d_h_t___unified_1_1_humidity.html#a10b6367e2c614daeac95f0b776eea4e8',1,'DHT_Unified::Humidity::Humidity()']]]
 ];

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['read',['read',['../class_d_h_t.html#a4c1508f2997a5d03968b3afdeae70e03',1,'DHT']]],
-  ['readhumidity',['readHumidity',['../class_d_h_t.html#a5f8c84378abe4eeecf34f09e2cdf90a0',1,'DHT']]],
-  ['readtemperature',['readTemperature',['../class_d_h_t.html#a68be09105aa7d831bb473c9d774918cf',1,'DHT']]]
+  ['temperature',['Temperature',['../class_d_h_t___unified_1_1_temperature.html',1,'DHT_Unified::Temperature'],['../class_d_h_t___unified.html#a97d6725d3406c9be896aae3e9d3cc75c',1,'DHT_Unified::temperature()'],['../class_d_h_t___unified_1_1_temperature.html#a3de5bff6832488921d39ea02bfd9d2ad',1,'DHT_Unified::Temperature::Temperature()']]],
+  ['timeout',['TIMEOUT',['../_d_h_t_8cpp.html#a45ba202b05caf39795aeca91b0ae547e',1,'DHT.cpp']]]
 ];
