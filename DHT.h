@@ -43,8 +43,8 @@
 /* Define types of sensors. */
 static const uint8_t DHT11{11};  /**< DHT TYPE 11 */
 static const uint8_t DHT12{12};  /**< DHY TYPE 12 */
-static const uint8_t DHT21{21};  /**< DHT TYPE 22 */
-static const uint8_t DHT22{22};  /**< DHT TYPE 21 */
+static const uint8_t DHT21{21};  /**< DHT TYPE 21 */
+static const uint8_t DHT22{22};  /**< DHT TYPE 22 */
 static const uint8_t AM2301{21}; /**< AM2301 */
 
 #if defined(TARGET_NAME) && (TARGET_NAME == ARDUINO_NANO33BLE)
