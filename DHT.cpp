@@ -360,7 +360,9 @@ bool DHT::read(bool force) {
 // in the very latest IDE versions):
 //   https://github.com/arduino/Arduino/blob/master/hardware/arduino/avr/cores/arduino/wiring_pulse.c
 uint32_t DHT::expectPulse(bool level) {
-#if (F_CPU > 16000000L)
+// F_CPU is not be known at compile time on platforms such as STM32F103.
+// The preprocessor seems to evaluate it to zero in that case.
+#if (F_CPU > 16000000L) || (F_CPU == 0L)
   uint32_t count = 0;
 #else
   uint16_t count = 0; // To work fast enough on slower AVR boards
