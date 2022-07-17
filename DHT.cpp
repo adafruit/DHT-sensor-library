@@ -72,6 +72,14 @@ void DHT::begin(uint8_t usec) {
   pullTime = usec;
 }
 
+void DHT::setPin(uint8_t newPin){
+	_pin = newPin;
+}
+
+void DHT::setType(uint8_t newType){
+	_type = newType;
+}
+
 /*!
  *  @brief  Read temperature
  *  @param  S
