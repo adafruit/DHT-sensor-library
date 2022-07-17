@@ -72,10 +72,20 @@ void DHT::begin(uint8_t usec) {
   pullTime = usec;
 }
 
+/*!
+ *  @brief  Sets the _pin property value
+ *  @param  newPin
+ *          pin number that sensor is connected
+ */
 void DHT::setPin(uint8_t newPin){
 	_pin = newPin;
 }
 
+/*!
+ *  @brief  Sets the _type property value
+ *  @param  newType
+ *          type of sensor
+ */
 void DHT::setType(uint8_t newType){
 	_type = newType;
 }
