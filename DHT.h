@@ -62,8 +62,10 @@ static const uint8_t AM2301{21}; /**< AM2301 */
  */
 class DHT {
 public:
+  DHT();
   DHT(uint8_t pin, uint8_t type, uint8_t count = 6);
   void begin(uint8_t usec = 55);
+  void begin(uint8_t pin, uint8_t type, uint8_t usec = 55);
   float readTemperature(bool S = false, bool force = false);
   float convertCtoF(float);
   float convertFtoC(float);
