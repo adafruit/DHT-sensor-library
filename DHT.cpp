@@ -41,8 +41,8 @@ DHT::DHT() {
   // initialize members _pin and _type in the class definition.
   // They can be modified via DHT::begin(uint8_t pin, uint8_t type, uint8_t usec).
 #ifdef __AVR
-  _bit = digitalPinToBitMask(pin);
-  _port = digitalPinToPort(pin);
+  _bit = digitalPinToBitMask(_pin);
+  _port = digitalPinToPort(_pin);
 #endif
   _maxcycles = microsecondsToClockCycles(1000); // 1 millisecond timeout for
                                                 // reading pulses from DHT sensor.
