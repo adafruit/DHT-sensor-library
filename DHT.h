@@ -18,6 +18,10 @@
 #ifndef DHT_H
 #define DHT_H
 
+#ifndef UINT32_MAX
+#define UINT32_MAX 4294967295
+#endif
+
 #include "Arduino.h"
 
 /* Uncomment to enable printing out nice debug messages. */
