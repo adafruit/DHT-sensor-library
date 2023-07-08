@@ -33,7 +33,7 @@ DHT dht(DHTPIN, DHTTYPE);
 void setup() {
   Serial.begin(9600);
   Serial.println(F("DHTxx test!"));
-
+  Serial.println(F("Starting " __FILE__ " from " __DATE__ __TIME__));// Prints the file name.
   dht.begin();
 }
 
