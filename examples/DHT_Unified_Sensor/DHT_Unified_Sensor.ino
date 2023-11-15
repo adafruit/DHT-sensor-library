@@ -32,6 +32,7 @@ void setup() {
   // Initialize device.
   dht.begin();
   Serial.println(F("DHTxx Unified Sensor Example"));
+  Serial.println(F("Starting " __FILE__ " from " __DATE__ __TIME__));// Prints the file name.
   // Print temperature sensor details.
   sensor_t sensor;
   dht.temperature().getSensor(&sensor);
