@@ -30,6 +30,25 @@
   UINT32_MAX /**< Used programmatically for timeout.                           \
                    Not a timeout duration. Type: uint32_t. */
 
+/**
+ * @brief Instantiates a default DHT class
+ *
+ */
+DHT::DHT() {
+  _pin = 2;      // pin 2 set as the default data pin
+  _type = DHT11; // using the DHT11 sensor as the default sensor type.
+  // Note that pin 2 and DHT11 are just default values to initialize members
+  // _pin and _type in the class definition. They can be modified via
+  // DHT::begin(uint8_t pin, uint8_t type, uint8_t usec).
+#ifdef __AVR
+  _bit = digitalPinToBitMask(_pin);
+  _port = digitalPinToPort(_pin);
+#endif
+  _maxcycles =
+      microsecondsToClockCycles(1000); // 1 millisecond timeout for
+                                       // reading pulses from DHT sensor.
+}
+
 /*!
  *  @brief  Instantiates a new DHT class
  *  @param  pin
@@ -70,6 +89,27 @@ void DHT::begin(uint8_t usec) {
   DEBUG_PRINT("DHT max clock cycles: ");
   DEBUG_PRINTLN(_maxcycles, DEC);
   pullTime = usec;
+}
+
+/**
+ * @brief Setup sensor pins and set pull timings
+ *
+ * @param pin
+ *        pin number that sensor is connected
+ * @param type
+ *        type of sensor
+ * @param usec
+ *        Optionally pass pull-up time (in microseconds) before DHT reading
+ * starts. Default is 55 (see function declaration in DHT.h).
+ */
+void DHT::begin(uint8_t pin, uint8_t type, uint8_t usec) {
+  _pin = pin;
+  _type = type;
+#ifdef __AVR
+  _bit = digitalPinToBitMask(pin);
+  _port = digitalPinToPort(pin);
+#endif
+  begin(usec);
 }
 
 /*!
