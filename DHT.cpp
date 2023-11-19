@@ -74,7 +74,7 @@ void DHT::begin(uint8_t usec) {
 
 /*!
  *  @brief  Read temperature
- *  @param  S
+ *  @param  Scaling
  *          Scale. Boolean value:
  *					- true = Fahrenheit
  *					- false = Celcius
@@ -82,7 +82,7 @@ void DHT::begin(uint8_t usec) {
  *          true if in force mode
  *	@return Temperature value in selected scale
  */
-float DHT::readTemperature(bool S, bool force) {
+float DHT::readTemperature(bool Scaling, bool force) {
   float f = NAN;
 
   if (read(force)) {
@@ -93,7 +93,7 @@ float DHT::readTemperature(bool S, bool force) {
         f = -1 - f;
       }
       f += (data[3] & 0x0f) * 0.1;
-      if (S) {
+      if (Scaling) {
         f = convertCtoF(f);
       }
       break;
@@ -103,7 +103,7 @@ float DHT::readTemperature(bool S, bool force) {
       if (data[2] & 0x80) {
         f *= -1;
       }
-      if (S) {
+      if (Scaling) {
         f = convertCtoF(f);
       }
       break;
@@ -114,7 +114,7 @@ float DHT::readTemperature(bool S, bool force) {
       if (data[2] & 0x80) {
         f *= -1;
       }
-      if (S) {
+      if (Scaling) {
         f = convertCtoF(f);
       }
       break;
