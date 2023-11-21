@@ -64,6 +64,8 @@ class DHT {
 public:
   DHT(uint8_t pin, uint8_t type, uint8_t count = 6);
   void begin(uint8_t usec = 55);
+  void setPin(uint8_t newPin);
+  void setType(uint8_t newType);
   float readTemperature(bool S = false, bool force = false);
   float convertCtoF(float);
   float convertFtoC(float);
