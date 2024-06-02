@@ -197,21 +197,21 @@ float DHT::computeHeatIndex(float temperature, float percentHumidity,
     temperature = convertCtoF(temperature);
 
   hi = 0.5F * (temperature + 61.0F + ((temperature - 68.0F) * 1.2F) +
-              (percentHumidity * 0.094F));
+               (percentHumidity * 0.094F));
 
   if (hi > 79.F) {
     hi = -42.379F + 2.04901523F * temperature + 10.14333127F * percentHumidity +
          -0.22475541F * temperature * percentHumidity +
-         -0.00683783F * pow(temperature, 2.F) +
-         -0.05481717F * pow(percentHumidity, 2.F) +
-         0.00122874F * pow(temperature, 2.F) * percentHumidity +
-         0.00085282F * temperature * pow(percentHumidity, 2.F) +
-         -0.00000199F * pow(temperature, 2.F) * pow(percentHumidity, 2.F);
+         -0.00683783F * powf(temperature, 2.F) +
+         -0.05481717F * powf(percentHumidity, 2.F) +
+         0.00122874F * powf(temperature, 2.F) * percentHumidity +
+         0.00085282F * temperature * powf(percentHumidity, 2.F) +
+         -0.00000199F * powf(temperature, 2.F) * powf(percentHumidity, 2.F);
 
     if ((percentHumidity < 13.F) && (temperature >= 80.0F) &&
         (temperature <= 112.0F))
       hi -= ((13.0F - percentHumidity) * 0.25F) *
-            sqrt((17.0F - abs(temperature - 95.0F)) * 0.05882F);
+            sqrtf((17.0F - abs(temperature - 95.0F)) * 0.05882F);
 
     else if ((percentHumidity > 85.0F) && (temperature >= 80.0F) &&
              (temperature <= 87.0F))
