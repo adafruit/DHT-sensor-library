@@ -90,18 +90,18 @@ float DHT::readTemperature(bool S, bool force) {
     case DHT11:
       f = data[2];
       if (data[3] & 0x80) {
-        f = -1 - f;
+        f = -1.F - f;
       }
-      f += (data[3] & 0x0f) * 0.1;
+      f += (data[3] & 0x0f) * 0.1F;
       if (S) {
         f = convertCtoF(f);
       }
       break;
     case DHT12:
       f = data[2];
-      f += (data[3] & 0x0f) * 0.1;
+      f += (data[3] & 0x0f) * 0.1F;
       if (data[2] & 0x80) {
-        f *= -1;
+        f *= -1.F;
       }
       if (S) {
         f = convertCtoF(f);
@@ -110,9 +110,9 @@ float DHT::readTemperature(bool S, bool force) {
     case DHT22:
     case DHT21:
       f = ((word)(data[2] & 0x7F)) << 8 | data[3];
-      f *= 0.1;
+      f *= 0.1F;
       if (data[2] & 0x80) {
-        f *= -1;
+        f *= -1.F;
       }
       if (S) {
         f = convertCtoF(f);
@@ -129,7 +129,7 @@ float DHT::readTemperature(bool S, bool force) {
  *					value in Celcius
  *	@return float value in Fahrenheit
  */
-float DHT::convertCtoF(float c) { return c * 1.8 + 32; }
+float DHT::convertCtoF(float c) { return c * 1.8F + 32.F; }
 
 /*!
  *  @brief  Converts Fahrenheit to Celcius
@@ -137,7 +137,7 @@ float DHT::convertCtoF(float c) { return c * 1.8 + 32; }
  *					value in Fahrenheit
  *	@return float value in Celcius
  */
-float DHT::convertFtoC(float f) { return (f - 32) * 0.55555; }
+float DHT::convertFtoC(float f) { return (f - 32.F) * 0.55555F; }
 
 /*!
  *  @brief  Read Humidity
@@ -151,12 +151,12 @@ float DHT::readHumidity(bool force) {
     switch (_type) {
     case DHT11:
     case DHT12:
-      f = data[0] + data[1] * 0.1;
+      f = data[0] + data[1] * 0.1F;
       break;
     case DHT22:
     case DHT21:
       f = ((word)data[0]) << 8 | data[1];
-      f *= 0.1;
+      f *= 0.1F;
       break;
     }
   }
@@ -196,26 +196,26 @@ float DHT::computeHeatIndex(float temperature, float percentHumidity,
   if (!isFahrenheit)
     temperature = convertCtoF(temperature);
 
-  hi = 0.5 * (temperature + 61.0 + ((temperature - 68.0) * 1.2) +
-              (percentHumidity * 0.094));
+  hi = 0.5F * (temperature + 61.0F + ((temperature - 68.0F) * 1.2F) +
+              (percentHumidity * 0.094F));
 
-  if (hi > 79) {
-    hi = -42.379 + 2.04901523 * temperature + 10.14333127 * percentHumidity +
-         -0.22475541 * temperature * percentHumidity +
-         -0.00683783 * pow(temperature, 2) +
-         -0.05481717 * pow(percentHumidity, 2) +
-         0.00122874 * pow(temperature, 2) * percentHumidity +
-         0.00085282 * temperature * pow(percentHumidity, 2) +
-         -0.00000199 * pow(temperature, 2) * pow(percentHumidity, 2);
+  if (hi > 79.F) {
+    hi = -42.379F + 2.04901523F * temperature + 10.14333127F * percentHumidity +
+         -0.22475541F * temperature * percentHumidity +
+         -0.00683783F * pow(temperature, 2.F) +
+         -0.05481717F * pow(percentHumidity, 2.F) +
+         0.00122874F * pow(temperature, 2.F) * percentHumidity +
+         0.00085282F * temperature * pow(percentHumidity, 2.F) +
+         -0.00000199F * pow(temperature, 2.F) * pow(percentHumidity, 2.F);
 
-    if ((percentHumidity < 13) && (temperature >= 80.0) &&
-        (temperature <= 112.0))
-      hi -= ((13.0 - percentHumidity) * 0.25) *
-            sqrt((17.0 - abs(temperature - 95.0)) * 0.05882);
+    if ((percentHumidity < 13.F) && (temperature >= 80.0F) &&
+        (temperature <= 112.0F))
+      hi -= ((13.0F - percentHumidity) * 0.25F) *
+            sqrt((17.0F - abs(temperature - 95.0F)) * 0.05882F);
 
-    else if ((percentHumidity > 85.0) && (temperature >= 80.0) &&
-             (temperature <= 87.0))
-      hi += ((percentHumidity - 85.0) * 0.1) * ((87.0 - temperature) * 0.2);
+    else if ((percentHumidity > 85.0F) && (temperature >= 80.0F) &&
+             (temperature <= 87.0F))
+      hi += ((percentHumidity - 85.0F) * 0.1F) * ((87.0F - temperature) * 0.2F);
   }
 
   return isFahrenheit ? hi : convertFtoC(hi);
