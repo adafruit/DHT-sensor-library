@@ -47,7 +47,7 @@ static const uint8_t DHT21{21};  /**< DHT TYPE 21 */
 static const uint8_t DHT22{22};  /**< DHT TYPE 22 */
 static const uint8_t AM2301{21}; /**< AM2301 */
 
-#if defined(TARGET_NAME) && (TARGET_NAME == ARDUINO_NANO33BLE)
+#if defined(TARGET_NAME) && (TARGET_NAME == ARDUINO_NANO33BLE) || defined(ARDUINO_MATTER)
 #ifndef microsecondsToClockCycles
 /*!
  * As of 7 Sep 2020 the Arduino Nano 33 BLE boards do not have
