@@ -305,7 +305,7 @@ bool DHT::read(bool force) {
       cycles[i] = expectPulse(LOW);
       cycles[i + 1] = expectPulse(HIGH);
 
-      if (cycles[i]==TIMEOUT || cycles[i+1]==TIMEOUT){
+      if (cycles[i] == TIMEOUT || cycles[i + 1] == TIMEOUT) {
         DEBUG_PRINTLN(F("DHT timeout waiting for data signal."));
         _lastresult = false;
         return _lastresult;
