@@ -304,6 +304,12 @@ bool DHT::read(bool force) {
     for (int i = 0; i < 80; i += 2) {
       cycles[i] = expectPulse(LOW);
       cycles[i + 1] = expectPulse(HIGH);
+
+      if (cycles[i] == TIMEOUT || cycles[i + 1] == TIMEOUT) {
+        DEBUG_PRINTLN(F("DHT timeout waiting for data signal."));
+        _lastresult = false;
+        return _lastresult;
+      }
     }
   } // Timing critical code is now complete.
 
@@ -312,11 +318,7 @@ bool DHT::read(bool force) {
   for (int i = 0; i < 40; ++i) {
     uint32_t lowCycles = cycles[2 * i];
     uint32_t highCycles = cycles[2 * i + 1];
-    if ((lowCycles == TIMEOUT) || (highCycles == TIMEOUT)) {
-      DEBUG_PRINTLN(F("DHT timeout waiting for pulse."));
-      _lastresult = false;
-      return _lastresult;
-    }
+
     data[i / 8] <<= 1;
     // Now compare the low and high cycle times to see if the bit is a 0 or 1.
     if (highCycles > lowCycles) {
