@@ -76,6 +76,7 @@ public:
 private:
   uint8_t data[5];
   uint8_t _pin, _type;
+  uint32_t _minInterval; // Minimum interval between reads
 #ifdef __AVR
   // Use direct GPIO access on an 8-bit AVR so keep track of the port and
   // bitmask for the digital pin connected to the DHT.  Other platforms will use
