@@ -21,23 +21,29 @@
 #include "Arduino.h"
 
 /* Uncomment to enable printing out nice debug messages. */
-//#define DHT_DEBUG
+// #define DHT_DEBUG
 
-#define DEBUG_PRINTER                                                          \
-  Serial /**< Define where debug output will be printed.                       \
+#define DEBUG_PRINTER                                    \
+  Serial /**< Define where debug output will be printed. \
           */
 
 /* Setup debug printing macros. */
 #ifdef DHT_DEBUG
-#define DEBUG_PRINT(...)                                                       \
-  { DEBUG_PRINTER.print(__VA_ARGS__); }
-#define DEBUG_PRINTLN(...)                                                     \
-  { DEBUG_PRINTER.println(__VA_ARGS__); }
+#define DEBUG_PRINT(...)              \
+  {                                   \
+    DEBUG_PRINTER.print(__VA_ARGS__); \
+  }
+#define DEBUG_PRINTLN(...)              \
+  {                                     \
+    DEBUG_PRINTER.println(__VA_ARGS__); \
+  }
 #else
-#define DEBUG_PRINT(...)                                                       \
-  {} /**< Debug Print Placeholder if Debug is disabled */
-#define DEBUG_PRINTLN(...)                                                     \
-  {} /**< Debug Print Line Placeholder if Debug is disabled */
+#define DEBUG_PRINT(...) \
+  {                      \
+  } /**< Debug Print Placeholder if Debug is disabled */
+#define DEBUG_PRINTLN(...) \
+  {                        \
+  } /**< Debug Print Line Placeholder if Debug is disabled */
 #endif
 
 /* Define types of sensors. */
@@ -61,7 +67,7 @@ static const uint8_t AM2301{21}; /**< AM2301 */
  *  @brief  Class that stores state and functions for DHT
  */
 class DHT {
-public:
+ public:
   DHT(uint8_t pin, uint8_t type, uint8_t count = 6);
   void begin(uint8_t usec = 55);
   float readTemperature(bool S = false, bool force = false);
@@ -73,7 +79,7 @@ public:
   float readHumidity(bool force = false);
   bool read(bool force = false);
 
-private:
+ private:
   uint8_t data[5];
   uint8_t _pin, _type;
 #ifdef __AVR
@@ -93,7 +99,7 @@ private:
  *  @brief  Class that defines Interrupt Lock Avaiability
  */
 class InterruptLock {
-public:
+ public:
   InterruptLock() {
 #if !defined(ARDUINO_ARCH_NRF52)
     noInterrupts();

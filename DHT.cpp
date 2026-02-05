@@ -26,8 +26,8 @@
 #include "DHT.h"
 
 #define MIN_INTERVAL 2000 /**< min interval value */
-#define TIMEOUT                                                                \
-  UINT32_MAX /**< Used programmatically for timeout.                           \
+#define TIMEOUT                                      \
+  UINT32_MAX /**< Used programmatically for timeout. \
                    Not a timeout duration. Type: uint32_t. */
 
 /*!
@@ -87,37 +87,37 @@ float DHT::readTemperature(bool S, bool force) {
 
   if (read(force)) {
     switch (_type) {
-    case DHT11:
-      f = data[2];
-      if (data[3] & 0x80) {
-        f = -1 - f;
-      }
-      f += (data[3] & 0x0f) * 0.1;
-      if (S) {
-        f = convertCtoF(f);
-      }
-      break;
-    case DHT12:
-      f = data[2];
-      f += (data[3] & 0x0f) * 0.1;
-      if (data[2] & 0x80) {
-        f *= -1;
-      }
-      if (S) {
-        f = convertCtoF(f);
-      }
-      break;
-    case DHT22:
-    case DHT21:
-      f = ((word)(data[2] & 0x7F)) << 8 | data[3];
-      f *= 0.1;
-      if (data[2] & 0x80) {
-        f *= -1;
-      }
-      if (S) {
-        f = convertCtoF(f);
-      }
-      break;
+      case DHT11:
+        f = data[2];
+        if (data[3] & 0x80) {
+          f = -1 - f;
+        }
+        f += (data[3] & 0x0f) * 0.1;
+        if (S) {
+          f = convertCtoF(f);
+        }
+        break;
+      case DHT12:
+        f = data[2];
+        f += (data[3] & 0x0f) * 0.1;
+        if (data[2] & 0x80) {
+          f *= -1;
+        }
+        if (S) {
+          f = convertCtoF(f);
+        }
+        break;
+      case DHT22:
+      case DHT21:
+        f = ((word)(data[2] & 0x7F)) << 8 | data[3];
+        f *= 0.1;
+        if (data[2] & 0x80) {
+          f *= -1;
+        }
+        if (S) {
+          f = convertCtoF(f);
+        }
+        break;
     }
   }
   return f;
@@ -129,7 +129,9 @@ float DHT::readTemperature(bool S, bool force) {
  *					value in Celcius
  *	@return float value in Fahrenheit
  */
-float DHT::convertCtoF(float c) { return c * 1.8 + 32; }
+float DHT::convertCtoF(float c) {
+  return c * 1.8 + 32;
+}
 
 /*!
  *  @brief  Converts Fahrenheit to Celcius
@@ -137,7 +139,9 @@ float DHT::convertCtoF(float c) { return c * 1.8 + 32; }
  *					value in Fahrenheit
  *	@return float value in Celcius
  */
-float DHT::convertFtoC(float f) { return (f - 32) * 0.55555; }
+float DHT::convertFtoC(float f) {
+  return (f - 32) * 0.55555;
+}
 
 /*!
  *  @brief  Read Humidity
@@ -149,15 +153,15 @@ float DHT::readHumidity(bool force) {
   float f = NAN;
   if (read(force)) {
     switch (_type) {
-    case DHT11:
-    case DHT12:
-      f = data[0] + data[1] * 0.1;
-      break;
-    case DHT22:
-    case DHT21:
-      f = ((word)data[0]) << 8 | data[1];
-      f *= 0.1;
-      break;
+      case DHT11:
+      case DHT12:
+        f = data[0] + data[1] * 0.1;
+        break;
+      case DHT22:
+      case DHT21:
+        f = ((word)data[0]) << 8 | data[1];
+        f *= 0.1;
+        break;
     }
   }
   return f;
@@ -256,14 +260,14 @@ bool DHT::read(bool force) {
   pinMode(_pin, OUTPUT);
   digitalWrite(_pin, LOW);
   switch (_type) {
-  case DHT22:
-  case DHT21:
-    delayMicroseconds(1100); // data sheet says "at least 1ms"
-    break;
-  case DHT11:
-  default:
-    delay(20); // data sheet says at least 18ms, 20ms just to be safe
-    break;
+    case DHT22:
+    case DHT21:
+      delayMicroseconds(1100); // data sheet says "at least 1ms"
+      break;
+    case DHT11:
+    default:
+      delay(20); // data sheet says at least 18ms, 20ms just to be safe
+      break;
   }
 
   uint32_t cycles[80];
