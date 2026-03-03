@@ -43,6 +43,12 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
   (void)count; // Workaround to avoid compiler warning.
   _pin = pin;
   _type = type;
+    // Adjust MIN_INTERVAL based on sensor type
+  if (_type == DHT11) {
+    _minInterval = 1000; // 1 second for DHT11
+  } else {
+    _minInterval = 2000; // 2 seconds for other types
+  }
 #ifdef __AVR
   _bit = digitalPinToBitMask(pin);
   _port = digitalPinToPort(pin);
