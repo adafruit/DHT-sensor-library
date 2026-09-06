@@ -90,20 +90,33 @@ class DHT {
 };
 
 /*!
- *  @brief  Class that defines Interrupt Lock Avaiability
+ *  @brief  Class that disables interrupts for timing-critical DHT reads.
+ *
+ *  On some ESP32 toolchains (e.g. gcc 14.x), relying solely on the destructor
+ *  to call interrupts() has been observed to leave interrupts disabled after
+ *  DHT::read(). release() lets callers restore IRQs explicitly on every path.
  */
 class InterruptLock {
  public:
-  InterruptLock() {
+  InterruptLock() : _held(true) {
 #if !defined(ARDUINO_ARCH_NRF52)
     noInterrupts();
 #endif
   }
-  ~InterruptLock() {
+  void release() {
+    if (!_held) {
+      return;
+    }
 #if !defined(ARDUINO_ARCH_NRF52)
     interrupts();
 #endif
+    _held = false;
   }
+  ~InterruptLock() { release(); }
+
+ private:
+  // Volatile so compilers keep the RAII object / side effects.
+  volatile bool _held;
 };
 
 #endif
