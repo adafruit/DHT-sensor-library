@@ -289,11 +289,13 @@ bool DHT::read(bool force) {
     if (expectPulse(LOW) == TIMEOUT) {
       DEBUG_PRINTLN(F("DHT timeout waiting for start signal low pulse."));
       _lastresult = false;
+      lock.release(); // ensure IRQs restored (see #225)
       return _lastresult;
     }
     if (expectPulse(HIGH) == TIMEOUT) {
       DEBUG_PRINTLN(F("DHT timeout waiting for start signal high pulse."));
       _lastresult = false;
+      lock.release(); // ensure IRQs restored (see #225)
       return _lastresult;
     }
 
@@ -309,6 +311,7 @@ bool DHT::read(bool force) {
       cycles[i] = expectPulse(LOW);
       cycles[i + 1] = expectPulse(HIGH);
     }
+    lock.release(); // ensure IRQs restored even if dtor is skipped (#225)
   } // Timing critical code is now complete.
 
   // Inspect pulses and determine which ones are 0 (high state cycle count < low
