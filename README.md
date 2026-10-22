@@ -13,7 +13,7 @@ You can find DHT tutorials [here](https://learn.adafruit.com/dht).
 
 Contributions are welcome!  Not only you’ll encourage the development of the library, but you’ll also learn how to best use the library and probably some C++ too
 
-Please read our [Code of Conduct](https://github.com/adafruit/DHT-sensor-library/blob/master/CODE_OF_CONDUCT.md>)
+Please read our [Code of Conduct](https://github.com/adafruit/DHT-sensor-library/blob/master/code-of-conduct.md)
 before contributing to help this project stay welcoming.
 
 ## Documentation and doxygen
